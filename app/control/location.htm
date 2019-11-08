@@ -1,0 +1,181 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+        
+        <script>
+		//app requests permission to access positional data...
+
+//clearWatch stops listening for updates position
+//location.getCurrentPosition obtains position in latitude/longitude 
+
+//$(function () {
+function startLocation() {
+    var watchID;
+
+   // $("#watch").click(function () {
+        //if (Modernizr.geolocation) {
+            var nav = window.navigator;
+
+            if (nav != null) {
+                var geoloc = nav.geolocation;
+                watchID = geoloc.watchPosition(successCallback, errorCallback); } //}
+        //else
+       // { $("#message").text("You'll need to enter your address manually."); } 
+      // }); });
+      }
+
+function successCallback(position) {
+    var latitude = position.coords.latitude;
+    var longitude = position.coords.longitude;
+
+	alert('There you are at ' + latitude + ' ' + longitude);
+    //$("#message").text("There you are at " + latitude + " " + longitude); 
+    }
+
+function errorCallback(error) {
+    switch (error.code) {
+        case error.PERMISSION_DENIED: 
+
+            alert("User did not share geolocation data");
+            break;
+        case error.POSITION_UNAVAILABLE: 
+
+            alert("Could not detect current position");
+            break;
+        case error.TIMEOUT: 
+
+            alert("Time out");
+            break;
+        default: 
+
+            alert("Unknown error");
+            break;  } } 
+
+        </script>
+	</head>
+	<body>
+<button onclick="startLocation();">Location</button><button>Add Location</button>
+	<div>
+        <span>Location Name</span><button>Edit</button><button>Delete</button>
+        list of tags...
+        device information...
+        <a>Open Map</a>
+    </div>
+	</body>
+</html>
+
+<!--
+
+    sample data...
+
+{ 
+    name: Vancouver Island,
+    latitude: 50.0841536,
+    longitude: -127.0120676,
+    tags: [],
+
+    device:
+    datetime:
+}
+
+    Mount Rainer(Ohanapikash camp)/Adams/St Helens/Hood(Oregon), Cowlitz (milky river, glacier, grove of the patriarchs)
+
+Kenai Fjords National Park, Alaska
+California Lost Coasts
+White Mountain National Forest
+Widewater State Park
+Theodore Roosevelt's historic ranch in North Dakota
+
+McMennamins
+
+rotary park with climbing wall
+
+Seattle
+
+Washington
+
+Michigan for holidays and family
+
+bao @ Dough Zone
+
+church
+
+local diner/tavern/bar, buy hamburger/beer and pay with 2 gold coins
+...Gunslinger tag on a restaurant
+-->
+
+"Tracker" app (map Vantage via maps, be able to set decoys as Decoy app)
+3D treasure hunt, maps/Wikipedia hooks
+GPS permanent attachments with decoys
+
+<iframe id="map" width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" 
+	src="https://www.openstreetmap.org/export/embed.html?bbox=-122.52687010914089%2C47.51031465340279%2C-121.89103636890651%2C47.92837579703594&amp;layer=mapnik" style="border: 1px solid black"></iframe>
+
+<br/><small><a href="https://www.openstreetmap.org/#map=11/47.7198/-122.2090">View Larger Map</a></small>
+
+<button onclick="setMap();init();">Show VC Island</button>
+
+<script>
+var home_lat = 47.7;
+var home_lon = -122.2;
+
+var vc_island_lat = 50.0841536;
+var vc_island_lon = -127.0120676;
+
+var offset_lon = 0.63583374023438;
+var offset_lat = 0.41806114363315;
+var set_lat = vc_island_lat;
+var set_lon = vc_island_lon;
+//var set_lat = home_lat;
+//var set_lon = home_lon;
+
+var lower_lat = String(set_lat - (offset_lat / 2));
+var higher_lat = String(set_lat + (offset_lat / 2));
+var lower_lon = String(set_lon - (offset_lon / 2));
+var higher_lon = String(set_lon + (offset_lon / 2));
+
+var src = 'https://www.openstreetmap.org/export/embed.html';
+src += '?bbox=' + lower_lat;
+src += '%2C' + lower_lon;
+src += '%2C' + higher_lat;
+src += '%2C' + higher_lon;
+src += '&amp;layer=mapnik';
+
+function setMap() {
+document.getElementById("map").src = src;
+}
+</script>
+
+<!--
+	exact location...
+	src += '?bbox=' + '-122.52687010914089';
+src += '%2C' + '47.51031465340279';
+src += '%2C' + '-121.89103636890651';
+src += '%2C' + '47.92837579703594';
+-->
+
+<!--<script src="OpenLayers.js"></script>-->
+<script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
+<link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css">
+    <script>
+      function init() {
+        map = new OpenLayers.Map("basicMap");
+        var mapnik         = new OpenLayers.Layer.OSM();
+        var fromProjection = new OpenLayers.Projection("EPSG:4326");   // Transform from WGS 1984
+        var toProjection   = new OpenLayers.Projection("EPSG:900913"); // to Spherical Mercator Projection
+        var position       = new OpenLayers.LonLat(vc_island_lon,vc_island_lat).transform( fromProjection, toProjection);
+        var zoom           = 15; 
+
+        map.addLayer(mapnik);
+        map.setCenter(position, zoom );
+      }
+    </script>
+
+
+    <div id="basicMap" style="width:240px; height:240px;"></div>
+
+local adventure map/diagram (see <a href="https://en.wikipedia.org/wiki/Washington_(state)">history</a>), include Michigan
+
+compass.svg, directions.svg, location-arrow.svg, map-marked-alt.svg, map-marker-alt.svg, map-pin.svg
+
+

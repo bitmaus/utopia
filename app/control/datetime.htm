@@ -1,0 +1,650 @@
+<html>
+<head>
+        <script src="./jquery-3.3.1.min.js"></script>
+<script>
+UTC (Coordinated Universal Time) is the world's agreed upon time format and is broadcast from
+https://en.wikipedia.org/wiki/Coordinated_Universal_Time
+
+see map for adjustment
+
+DST (Daylight Saving Time)
+
+end DST (https://www.petition2congress.com/ctas/end-daylight-savings-time)
+
+Unix time (https://en.wikipedia.org/wiki/Unix_time)
+number of seconds that have elapsed since 00:00:00 Coordinated Universal Time (UTC), Thursday, 1 January 1970
+
+fun fact (https://en.wikipedia.org/wiki/Year_2038_problem)
+
+Every day is treated as if it contains exactly 86400 seconds
+fun fact (https://en.wikipedia.org/wiki/Leap_second)
+
+The Date.UTC() method accepts the same parameters as the longest form of the constructor, and returns the number of milliseconds in a Date object since January 1, 1970, 00:00:00, universal time.
+
+Date.UTC(year, month, day, hours, minutes, seconds, millisec)
+
+var currentdate = new Date(); 
+var datetime = "Last Sync: " + currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/" 
+                + currentdate.getFullYear() + " @ "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+
+full class vs. UTC timestamp as "event" design
+
+// AKA "date_time"
+
+// create "full" time class
+// seconds (ss)
+// minutes (mm)
+// hours (12/24, AM and PM/am and pm) (hh or HH, LL or ll)
+// day or day of week (dd and DD)
+// week day (full name/abbreviation) (WW or ww)
+// month (MM)
+// month name (full/abbreviation) (CC or cc)
+// year (yy or yyyy)
+// timezone (full/abbreviation) (zz or ZZ)
+// timestamp, milliseconds since 1970 (?)
+// vs.
+// milliseconds (UTC)
+
+var currentdate = new Date(); 
+var datetime = currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/" 
+                + currentdate.getFullYear() + " @ "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+
+document.write(datetime); //need easy edit format string (allow the same to be input...)
+//...requires string replace
+//...need inputs of milliseconds for start, end, frequency... (same with outputs)
+
+The getTimezoneOffset() method returns the time difference between UTC time and local time, in minutes.
+
+For example, If your time zone is GMT+2, -120 will be returned.
+
+Note: The returned value is not a constant, because of the practice of using Daylight Saving Time.
+
+Tip: The Universal Coordinated Time (UTC) is the time set by the World Time Standard.
+
+Note: UTC time is the same as GMT time.
+
+var current = new Date();
+var dd = current.getDate();
+var MM = current.getMonth(); 
+var yyyy = current.getFullYear();
+
+var mm = current.getMinutes();
+var hh = current.getHours();
+var ss = current.getSeconds();
+
+var today = yyyy + "." + MM + "." + dd + " " + hh + ":" + mm + ":" + ss;
+document.write(today);
+
+document.write("<br/>");
+
+var target = new Date();
+target.setHours(23);
+target.setMinutes(0);
+target.setSeconds(0);
+
+var x, y;
+
+function startTimer() {
+    //if (y != null)
+    clearInterval(y);
+x = setInterval(function() {
+    var currently = new Date();
+
+    var remaining2 = target - currently;  // in milliseconds
+
+var seconds2 = Math.floor(remaining2 / 1000);
+var minutes2 = Math.floor(seconds2 / 60);
+var hours2 = Math.floor(minutes2 / 60);
+document.getElementById("demo").innerHTML = hours2 + " hours, " + minutes2%60 + " minutes, " + seconds2%60 + " seconds";
+}, 1000);
+}
+
+function reverseTimer() {
+    //if (x != null)
+        clearInterval(x);
+y = setInterval(function() {
+    var currently = new Date();
+
+    var remaining2 = currently - current;  // in milliseconds
+
+var seconds2 = Math.floor(remaining2 / 1000);
+var minutes2 = Math.floor(seconds2 / 60);
+var hours2 = Math.floor(minutes2 / 60);
+document.getElementById("demo").innerHTML = hours2 + " hours, " + minutes2%60 + " minutes, " + seconds2%60 + " seconds";
+}, 1000);
+}
+
+function addItem(){
+	var ul = document.getElementById("dynamic-list");
+  var candidate = document.getElementById("candidate");
+  var li = document.createElement("li");
+  li.setAttribute('id',candidate.value);
+  li.appendChild(document.createTextNode(candidate.value));
+  ul.appendChild(li);
+}
+
+function removeItem(){
+	var ul = document.getElementById("dynamic-list");
+  var candidate = document.getElementById("candidate");
+  var item = document.getElementById(candidate.value);
+  ul.removeChild(item);
+}
+
+function addList(){
+	var ul2 = document.getElementById("dynamic-list2");
+  var candidate2 = document.getElementById("candidate2");
+  var li2 = document.createElement("input");
+
+  li2.setAttribute('type','checkbox');
+  //li.setAttribute('id',candidate.value);
+  
+  ul2.appendChild(li2);
+  ul2.appendChild(document.createTextNode(candidate2.value));
+  ul2.appendChild(document.createElement("br"));
+}
+
+function hide(element){
+    element.style.display = "none";
+}
+
+function show(element){
+    element.style.display = "inline-block";
+}
+
+function toggleDisplay() {
+    if (document.getElementById("view_display").checked)
+        hide(document.getElementById("demo"));
+    else
+        show(document.getElementById("demo"));
+}
+
+if (typeof(Storage) !== "undefined") {
+    // Code for localStorage/sessionStorage.
+
+    //alert('supports storage');
+
+
+} else {
+    // Sorry! No Web Storage support..
+}
+
+function saveStorage() {
+    localStorage.setItem("stone", current);
+}
+
+function loadStorage() {
+    
+    current = new Date(localStorage.getItem("stone"));
+    alert(current);
+}
+
+function newTask() {
+    alert('here');
+    $.post("http://api.treeop.com/notes", {"title": "My first note", "content": "Does it work?"}, function(result){
+        alert(result);
+    });
+}
+</script>
+</head>
+<body>
+    <p>Change release form</p>
+    <div id="demo"></div>
+    <input id="view_display" type="checkbox" onclick="toggleDisplay();" />view display
+    <br />
+    <input type="checkbox" />countdown/up
+    <button onclick="reverseTimer();">Reverse</button>
+    <br />
+    end of day <input type="text" value="11:00PM" />
+    <br />
+    <select>
+            <option>Plain</option>
+            <option>Formal</option>
+          </select>
+    <br />
+    <button onclick="startTimer();">Start</button>
+    <br />
+    <input type="text" id="candidate2"/><button onclick="addList();">Add List</button>
+    <br />
+    <input type="text" id="candidate"/><button onclick="addItem()">Add Note</button>
+    <br />
+    visualization of 24 cylinders, 60 bars, 60 dots (hours, minutes, seconds)
+    convert checkboxes to buttons that change labels
+
+    <ul id="dynamic-list"></ul>
+
+<button onclick="removeItem()">remove item</button>
+<br/>
+<button onclick="saveStorage();">Save</button><button onclick="loadStorage();">Load</button>
+<br/>
+<button onclick="newTask();">New Task</button>
+<div id="dynamic-list2"></div>
+</body>
+</html>
+
+If a year is divisible by 4, 100 and 400, it's a leap year.
+
+If a year is divisible by 4 and 100 but not divisible by 400, it's not a leap year.
+If a year is divisible by 4 but not divisible by 100, it's a leap year.
+If a year is not divisible by 1, it's not a leap year.
+
+include "routine", hour glass
+
+need "event" model...
+
+{	name: "event name",
+	year: "year",
+	month: "month",
+	day: "day",
+	hour: "hour",
+	minute: "minute",
+	range: "event_id",
+	frequency: [ unit: "year_month_day_hour", point: ["J_Mo_0", "F_Tu_1"] ],
+	note: "event note",
+	tags: ["tag_id1", "tag_id2"],
+	tasks: ["task_id1", "task_id2"],
+	items: ["item_id1", item_id2"],
+	stickers: ["sticker_id1", "sticker_id2"]
+}
+
+
+name|year|month|day|hour|minute|task()|range(month|day|hour|minute)|frequency()|start(year|month|day)|end(year|month|day)|note()
+
+...condense to datetime format string, datetime string|format (or just use milliseconds?)
+name|start|end|frequency
+
+Matt's birthday|1979|4|14
+...Matt's birthday|1979-4-14|yyyy-MM-DD
+Kate's birthday|1979|6|30
+Noah's birthday|2006|11|28
+Adam's birthday|2010|3|25
+Anniversary|2006|4|1
+Valentine's day||2|14
+Easter||||||church
+Halloween||10|31
+Thanksgiving||11|23,
+	task: "feast"
+Christmas||12|25|||(gifts)
+Michigan||12||||(Dad's house|music mixes|Rosetta Stone|Schinske|gift trip|fixed bag|Mom and Pop specs|Indiana visit|Satchel's BBQ)|(1|2)
+Woodin (Adam)||||8|40/55||(||15|30)|(M|T|Th|F)|(2018|9)|(2019|6)|(Jackson, room 23)
+Woodin (Adam)||||8|40/55||(||14)|(W)|(2018|9)|(2019|6)|(Jackson, room 23)
+Piano (Noah, Adam)||||17|45|||(Th)
+Dinner
+Gym
+Doctor
+Dentist
+Orthodontist
+Veternarian
+Transfers||||||||(M)
+Errands||||||||(F)
+Hygiene||||||||(F)
+Microsoft (Aquent) meeting||||14||||(M)
+On Call||||8||(||18)|(M|T|W|Th|F)
+
+Noah's school (8:25 to 3), bus @ Woodin at 7:40 and 3:14 (#193)
+...activity bus?
+
+treeop (6pm to midnight)
+...with dinner meeting and relax/refresh on weekends
+
+
+{
+	id: "personal",
+	type: "event",
+	title: "remarkable routine",
+	note: "only absolute is the day | days are easy to build and modify | script your day",
+	color: "blue" }
+
+{
+	id: "blue",
+	type: "color",
+	note: "123456" }
+
+...from timer.js
+    function getTimeStamp() {
+	var month_store = [
+		[1, 'January', 31, 0],
+		[2, 'February', 28, 31],
+		[3, 'March', 31, 59],
+		[4, 'April', 30, 90],
+		[5, 'May', 31, 120],
+		[6, 'June', 30, 151],
+		[7, 'July', 31, 181],
+		[8, 'August', 31, 212],
+		[9, 'September', 30, 242],
+		[10, 'October', 31, 273],
+		[11, 'November', 30, 303],
+		[12, 'December', 31, 334]
+	  ];
+	  
+	
+	if (!Date.now) 
+			Date.now = function() { return new Date().getTime(); }	
+			
+	var epoch = Date.now(); //time since January 1, 1970 (in milliseconds)
+	
+	var seconds = epoch / 1000;
+	var minutes = seconds / 60;
+	var hours = minutes / 60;
+	var days = hours / 24;
+	var years = days / 365;
+	var months = years * 12;
+
+	var current_year = 1970 + Math.floor(years);
+	//alert(current_year);
+	var current_month = Math.round(months) - (Math.floor(years) * 12);
+	//alert(current_month-1);
+	var day_count = month_store[current_month-1][3];
+	//alert(day_count);
+	var leap = 12;
+	
+	var current_day = Math.round(days) - (Math.floor(years) * 365) - day_count - leap;
+	
+	var time_zone = -8; //PST
+	var current_hour = Math.round(hours % 24 + time_zone);	
+	
+	if (current_hour < 0)
+		current_hour += 24;
+	
+	var current_minute = Math.round(minutes % 60);
+	var current_second = Math.round(seconds % 60);
+
+	return current_year + '.' + current_month + '.' + current_day + ', ' + current_hour + ':' + current_minute + ':' + current_second;
+}
+
+//...gives video/audio "nudges" intermittently
+//...easy "snooze"
+
+UTC (Coordinated Universal Time) is the world's agreed upon time format and is broadcast from
+https://en.wikipedia.org/wiki/Coordinated_Universal_Time
+
+see map for adjustment
+
+DST (Daylight Saving Time)
+
+end DST (https://www.petition2congress.com/ctas/end-daylight-savings-time)
+
+Unix time (https://en.wikipedia.org/wiki/Unix_time)
+number of seconds that have elapsed since 00:00:00 Coordinated Universal Time (UTC), Thursday, 1 January 1970
+
+fun fact (https://en.wikipedia.org/wiki/Year_2038_problem)
+
+Every day is treated as if it contains exactly 86400 seconds
+fun fact (https://en.wikipedia.org/wiki/Leap_second)
+
+The Date.UTC() method accepts the same parameters as the longest form of the constructor, and returns the number of milliseconds in a Date object since January 1, 1970, 00:00:00, universal time.
+
+Date.UTC(year, month, day, hours, minutes, seconds, millisec)
+
+var currentdate = new Date(); 
+var datetime = "Last Sync: " + currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/" 
+                + currentdate.getFullYear() + " @ "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+
+import java.util.Calendar
+
+Date currentTime = Calendar.getInstance().getTime();
+
+UTC service?
+
+
+full class vs. UTC timestamp as "event" design
+
+<style>
+    .month {
+        width: 640px;
+        height: 480px; }
+
+    .week {
+        width: 120px;
+        height: 40px;
+        display:inline-block; }
+
+    .day {
+        width: 120px;
+        height: 120px;
+        /*height:100%; 
+        width:100%; */
+        display:inline-block; }
+
+    .day-current {
+        background-color: rgb(104, 104, 187); }
+
+    .day-on {
+        background-color: lightgreen; }
+
+    .day-on:hover {
+        background-color: gainsboro; }
+
+    .day-off {
+        background-color: green; }
+
+    .day-off:hover {
+        background-color: gainsboro; }
+
+    .day-ghost {
+        background-color: gray; }
+
+    .day-tip {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black; }
+
+    .day-tip .day-tip-text {
+        visibility: hidden;
+        width: 120px;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        padding: 5px 0;
+        border-radius: 6px;
+
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -60px;
+
+        opacity: 0;
+        transition: opacity 0.3s; }
+
+    .day-tip .day-tip-text::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #555 transparent transparent transparent; }
+
+    .day-tip:hover .day-tip-text {
+        visibility: visible;
+        opacity: 1; }</style>
+
+<script>
+
+// name, number_of_days
+var months = [["January", 31],
+    ["February", 28],
+    ["March", 31],
+    ["April", 30],
+    ["May", 31],
+    ["June", 30],
+    ["July", 31],
+    ["August", 31],
+    ["September", 30],
+    ["October", 31],
+    ["November", 30],
+    ["December", 31]]; 
+
+var days = [["Monday", "M"],
+    ["Tuesday", "Tu"],
+    ["Wednesday", "W"],
+    ["Thursday", "Th"],
+    ["Friday", "F"],
+    ["Saturday", "Sa"],
+    ["Sunday", "Su"]];
+
+var current = new Date();
+
+var year = current.getFullYear();
+var month = current.getMonth(); 
+var day = current.getDay();
+
+var start = new Date(year, month, 1);
+var start_day = start.getDay();
+
+var week_counter = start_day;
+var coloring = false;
+
+var calendar_html = "", month_html = "", day_html = "";
+
+function drawCalendar() {
+    calendar_html += document.getElementById("month").outerHTML.replace("#month_name", months[month][0]).replace("#week_name", document.getElementById("week_name").outerHTML);
+
+    // ghost days
+    for (week_day = 0; week_day < start_day; week_day++) {
+        day_html += publish_day(0, "day-ghost"); }
+
+    // standard days
+    for (month_day = 1; month_day < months[month][1] + 1; month_day++)
+    {
+        if (week_counter == 7) {
+            month_html += document.getElementById("week").outerHTML.replace("#days", day_html);
+            day_html = "";
+            week_counter = 0; }
+
+        if (coloring) {
+            day_html += publish_day(month_day, "day-on");
+            coloring = false; }
+        else {
+            day_html += publish_day(month_day, "day-off");
+            coloring = true; }
+        
+        week_counter++;
+    }
+
+    // more ghost days
+    for (week_day = 0; week_day < 7 - week_counter; week_day++)
+    {
+        day_html += publish_day(0, "day-ghost");
+
+        //week_days++;
+
+        //if (week_days == 7)
+            //week_days = 0;
+            //answer = x > 10 ? 'greater than 10' : 'less than 10';
+        //week_days = week_days == 7 ? 0 : week_days;
+    }
+
+    month_html += document.getElementById("week").outerHTML.replace("#days", day_html);
+
+    document.getElementById("calendar").innerHTML = calendar_html.replace("#weeks", month_html);
+}
+
+function publish_day(day, day_type) {
+    //document.write("<div class='day tooltip " + day_type + "'>" + days[day][1]);
+    return document.getElementById("day").outerHTML.replace("#day_type", day_type).replace("#day_info", day.toString()).replace("#tool_info", day.toString());// "<div class='day tooltip " + day_type + "'>" + days[day][1]
+    //publish_tooltip(days[day][0]);
+    //publish_end();
+}
+
+//function volume(l, w, h) {
+ //   if (w === undefined)
+ //     w = 3;
+  //  if (h === undefined)
+  //    h = 4;
+ //   return l * w * h;
+  //}
+
+  //volume = (l, w = 3, h = 4 ) => (l * w * h);
+
+  //const welcome = 'You have logged in as ' + first + ' ' + last + '.'
+  //const welcome = `You have logged in as ${first} ${last}`;
+
+var text = '{ "name":"John", "birth":"1986-12-14", "city":"New York"}';
+var obj = JSON.parse(text, function (key, value) {
+    if (key == "birth") {
+        return new Date(value);
+    } else {
+        return value;
+    }});
+function bindJSON() {
+document.getElementById("demo").innerHTML = obj.name + ", " + obj.birth;
+}
+
+//const observable = require('mobx/observable');
+//const action = require('mobx/action');
+//const runInAction = require('mobx/runInAction');
+
+//const store = this.props.store;
+//const form = this.props.form;
+//const loading = this.props.loading;
+//const errors = this.props.errors;
+//const entity = this.props.entity;
+
+//import { observable, action, runInAction } from 'mobx';
+
+//const { store, form, loading, errors, entity } = this.props;
+
+//search array
+//pet = pets.find(pet => pet.type ==='Dog' && pet.name === 'Tommy');
+
+//Math.floor(4.9) === 4  //true
+//~~4.9 === 4  //true
+
+</script>
+<button onclick="drawCalendar();">Draw</button>
+<div data-include="option.htm"></div>
+				
+<div id="calendar"></div>
+
+<div id="month" class="template">
+    <div id="month_title">#month_name</div>
+    <div id="week_title">#week_name</div>
+    <div id="weeks">#weeks</div></div>
+
+<div id="week_name" class="template">
+    <div class="week"><span class="week-tip-text">Monday</span>M</div>
+    <div class="week"><span class="week-tip-text">Tuesday</span>Tu</div>
+    <div class="week"><span class="week-tip-text">Wednesday</span>W</div>
+    <div class="week"><span class="week-tip-text">Thursday</span>Th</div>
+    <div class="week"><span class="week-tip-text">Friday</span>F</div>
+    <div class="week"><span class="week-tip-text">Saturday</span>Sa</div>
+    <div class="week"><span class="week-tip-text">Sunday</span>Su</div></div>
+
+<div id="week" class="template">
+    <div id="days">#days</div></div>
+
+<div id="day" class="day day-tip #day_type template">
+    <div id="day_title"></div>
+    #day_info<span class="day-tip-text">#tool_info</span></div>
+
+<div id="week_view">
+
+</div>
+
+<div id="day_view"></div>
+
+<!--...spinning "ticket" (or sphere) of color phases with transition effect moving through time (next to current timestamp)
+...entire day "spectrum" view with task completion
+...use alarms with easy timer as dream/wake nudges and daylight simulation
+...inactivity nudge, motivational snooze (coffee break), stress/panic button
+...platform specific (widgets, 3D touch, badges, notifications)
+...multiple timers with hide paused feature
+...S | M | T | W | T | F | S  (as bubble buttons) (repeat checkbox)
+...time "flipper", negative time control-->
+
+
+calendar.svg, clock.svg, hourglass.svg, reminder.svg, reminder-off.svg, stopwatch.svg

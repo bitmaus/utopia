@@ -1,0 +1,89 @@
+<meta charset="utf-8">
+	<title>Mekanistic Therapeutics</title>
+    	<link rel="icon" type="image/ico" href="mek/favicon.ico">
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
+
+<div id="header"><a href=".\index.htm"><img src="mek/logo.png" /></a><div class="menu"><div id="menu-render"></div><br/><div id="border" class="menu-border"></div></div></div>
+
+<div id="content"><img id="cells" src="mek/cells.png" /><button onclick="loadContent();">Load</button></div>
+
+<div id="footer"><p id="footer-text">Novel cancer drugs to overcome resistance to targeted therapies</p><p id="footer-stamp">&copy; 2019, Mekanistic Therapeutics, LLC</p></div>
+
+<style>
+	@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed');
+        @import url('https://fonts.googleapis.com/css?family=Roboto');
+	@import url('https://fonts.googleapis.com/css?family=Varela+Round');
+
+	body { font-family: Roboto; font: 24px; margin: 0; padding: 0;}
+
+	#header { width: 100%; }
+	#header a { float:left; }
+	#header img { height: 140px; }
+
+	#cells { width:80%; height: 70%; position:relative; margin-top: 24px; }
+
+	#content { margin-left: 160px; margin-right: 100px; margin-top: 80px; opacity: 1; transition: opacity .1s ease-in; -webkit-transition: opacity .1s ease-in; -moz-transition: opacity .1s ease-in; -ms-transition: opacity .1s ease-in; -o-transition: opacity .1s ease-in; }
+
+	#footer { box-shadow: 2px; width:100%; background-color: #558bb2; position: fixed; left: 0; bottom: 0; text-align: center; padding-top: 12px; }
+	#footer-text { color: #1a5f91 !important; margin-top:24px; margin-left: 120px; font-size:24px; text-shadow:2px; }
+	#footer-stamp { color: black; text-align: right; margin-right: 24px; text-shadow:1px; }
+
+	.menu { display: inline-block; margin-top: 12px; margin-left: 24px; }
+	.menu-item { padding: 8 8 8 8; margin: 8 8 8 8; display:inline; }
+	.menu-item:hover { color: #558bb2; cursor: pointer; }
+
+	.blue { color: #558bb2; }
+
+	.menu-border { visibility: hidden; border-bottom: 2px solid #558bb2; width: 100px; }
+
+	.load { opacity: 0!important; }</style>
+
+<script>
+	var titles = [], contents = [];
+
+	function loadContent() {
+		$("#content").addClass("load");
+		$.get('mek/mek', function(data, status) { alert(data);
+    		$.post("http://mekanistic.com:8888/md", { md: data },
+  			function(data, status) { alert(data); menuBuild(data); }); }); }
+
+	function menuBuild(md) {
+		alert(md);
+		contents = md.split(/<h2>\w*<\/h2>/g);
+		titles = md.match(/<h2>\w*<\/h2>/g);
+		contents.shift();
+
+		var menu = "";
+		for (var a = 0; a < titles.length; a++) {
+			menu += "<span id='item" + a + "' class='menu-item' onmouseover='menuIn(" + a + ");' onmouseout='menuOut(" + a + ");' onclick='menuContent(" + a + ");'>" + titles[a].replace(/<h2>/g,'').replace(/<\/h2>/g,'') + "</span>"; }
+
+		document.getElementById("menu-render").outerHTML = menu; menuBorder(); }
+
+	function menuBorder() {
+		  var width, offset = 0, move = document.getElementById('item1').getBoundingClientRect().left;
+		  var border = document.getElementById('border').getBoundingClientRect().left;
+
+		  for (i = 0; i < contents.length; i++) {
+		    width = document.getElementById('item' + i).offsetWidth * .01;
+		    $("<style type='text/css'> .t" + i + " { transform-origin: left; visibility: visible!important; transform: translate3d(" + (move + offset - border) + "px, 0px, 0px) scaleX(" + width + "); transition: transform .2s; } </style>").appendTo("head");
+		    move = document.getElementById('item' + i).getBoundingClientRect().right;
+		    offset = 18; } }
+
+	function menuIn(item) {
+		document.getElementById("border").classList.remove("fade");
+	  	for (i = 0; i < contents.length; i++) { document.getElementById("border").classList.remove("t" + i); } 
+
+	  	document.getElementById('item' + item).classList.add("blue"); 
+	  	document.getElementById('border').classList.add('t' + item); }
+
+	function menuOut(item) {
+	    	document.getElementById('item' + item).classList.remove("blue");
+	    	document.getElementById('border').classList.add('fade'); }
+
+	function menuContent(item) { 
+		$("#content").addClass("load");
+		document.getElementById('content').innerHTML = contents[item]; 
+		setTimeout($("#content").removeClass("load"), 200000); }</script>
+

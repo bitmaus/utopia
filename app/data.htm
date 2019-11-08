@@ -1,0 +1,51 @@
+<script>
+
+var events = [2]; //need easy display timer (in green or red), calendar ui with input, UTC
+//names[0] = prompt("New member name?");
+events[0] = "Book Night";
+events[1] = "Christmas Eve";
+
+localStorage.setItem("events", JSON.stringify(events));
+
+var storedNames = JSON.parse(localStorage.getItem("events"));
+
+document.write(storedNames[0]); document.write(storedNames[1]);
+
+function callStorage(content, action, data, process) {
+    // keep synced with service calls
+}
+
+// add security token...
+
+var url = '192.168.1.111:8888'; // convert to api.treeop.com...
+var offline = false;
+
+function callService(content, action, data, process) {
+    // check if offline...
+    $.ajax({
+        url: "http://" + url + "/" + content + "/" + command,
+        data: { name: "John", time: "2pm" }, 
+        type: "POST",
+        dataType : "json",
+        success: function(data) {
+            // call "process"...
+            if (data != "done")
+                render(data);
+            },
+        error: function(xhr, status) {
+            alert("Services down");
+            callStorage(content, action, data, process);
+        },
+        complete: function(xhr, status) {}});}
+        
+        
+function checkService() {
+    $.ajax({
+        url: "http://" + url + "/online",
+        success: function(data) {
+            alert('yes');
+            offline = false;
+                },
+        error: function() {
+            alert('no');
+            offline = true; } }); }</script>

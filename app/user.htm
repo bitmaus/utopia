@@ -1,0 +1,242 @@
+
+<style>
+.icon {
+	height: 16px;
+	width: 16px;
+}
+
+img {
+	padding-left: 8px;
+	padding-right: 8px;
+}
+
+input {
+ /*animated border outlines and color change
+ tool tip validation output with green/red outlines and arrow borders, exclaimation icon
+
+...fade in dialog with close (background color, shadow, border)
+...
+
+submit animation (see https://codepen.io/jcoulterdesign/pen/azepmX) with spinner to animated "Authenticated successfully" or "Invalid credentials" dialog
+...button morphs as well
+
+add hover highlighting, press effects, morph into spinner
+*/ }
+</style>
+
+<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+
+<script>
+//secure cookie with status (initiate) and id (random1)
+//...client uses random1 to create/send password hash and random2
+
+//server validates/stores password hash with status (authenticate) and id (random3) *uses random1 and random2
+//...client validates and encrypts/sends email/sensitive information and random4
+
+//server validates/stores information with status (success) and server token (with expiration)
+//...client validates and stores/sends client token
+
+
+//all have bool check for success/fail:
+
+//user_create (email, password_hash, token_first)
+//...email verification to click link...
+//[token_new] user_valid (token_old)
+
+//[token_new] user_sign_in (email, password_hash, token_first)
+
+//user_sign_off (token_old)
+
+//[token_new] user_password (token, old_password_hash, new_password_hash)
+//...email notification
+
+//user_reset (email)
+//...email verification to click link...
+
+
+//[token_new] user_check (token_old)
+//...used for all transactions...
+
+
+//user sign in (logo, lock icon)
+//...email, password
+//...submit button
+//...remember me box
+
+//...forgot password? to email input...
+//...new user? to email/password/retype password input...
+
+//new user has email and "password"
+
+//existing user has email and "password"
+
+//for "password",
+//request "client_salt" and create "client_hash"
+//...send to server which adds "server_salt" and creates "server_hash"
+
+//recurring requests, for "password",
+//request existing client_salt and create client_hash
+//...send to server which computes server_hash with server_salt and compares
+
+  var mode = 'AES-GCM', length = 256, ivLength = 12, salt = 'a-unique-salt';  // request from server with email...
+  var encrypted, decrypted;
+function supportsCrypto () {
+alert(window.crypto && crypto.subtle && window.TextEncoder);
+}
+//supportsCrypto();
+
+async function genEncryptionKey (password, mode, length, salt) {
+	var algo = {
+		name: 'PBKDF2',
+		hash: 'SHA-256',
+		salt: new TextEncoder().encode(salt),
+		iterations: 1000
+	};
+
+	var derived = { name: mode, length: length };
+	var encoded = new TextEncoder().encode(password);
+	var key = await crypto.subtle.importKey('raw', encoded, { name: 'PBKDF2' }, false, ['deriveKey']);
+
+	return crypto.subtle.deriveKey(algo, key, derived, false, ['encrypt', 'decrypt']);
+}
+
+async function encrypt (text, password, mode, length, ivLength, salt) {
+	var algo = {
+		name: mode,
+		length: length,
+		iv: crypto.getRandomValues(new Uint8Array(ivLength))
+	};
+
+	var key = await genEncryptionKey(password, mode, length, salt);
+	var encoded = new TextEncoder().encode(text);
+
+	return {
+		cipherText: await crypto.subtle.encrypt(algo, key, encoded),
+			iv: algo.iv
+	};
+}
+
+async function decrypt (encrypted, password, mode, length, salt) {
+	var algo = {
+		name: mode,
+		length: length,
+		iv: encrypted.iv
+	};
+
+	var key = await genEncryptionKey(password, mode, length, salt);
+	var decrypted = await crypto.subtle.decrypt(algo, key, encrypted.cipherText);
+
+	return new TextDecoder().decode(decrypted);
+}
+
+async function startCrypt() {
+	encrypted = await encrypt('email address', document.getElementById('p').value, mode, length, ivLength, salt);
+	console.log(encrypted); // { cipherText: ArrayBuffer, iv: Uint8Array }
+}
+
+async function endCrypt() {
+	var decrypted = await decrypt(encrypted, document.getElementById('p').value, mode, length, salt);
+	console.log(decrypted); // Secret text
+}
+//...OAuth setup
+
+//token = encodeBase64Url(header) + '.' + encodeBase64Url(payload) + '.' + encodeBase64Url(signature) 
+//# token is now: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dnZWRJbkFzIjoiYWRtaW4iLCJpYXQiOjE0MjI3Nzk2Mzh9.gzSraSYS8EXBxLN_oWnFSRgCzcmJmMjLiuyu5CSpyHI 
+
+  $( ".input" ).focusin(function() {
+    $( this ).find( "span" ).animate({"opacity":"0"}, 200);
+  });
+
+  $( ".input" ).focusout(function() {
+    $( this ).find( "span" ).animate({"opacity":"1"}, 300);
+  });
+
+$(".login").submit(function(){
+  $(this).find(".submit i").removeAttr('class').addClass("fa fa-check").css({"color":"#fff"});
+  $(".submit").css({"background":"#2ecc71", "border-color":"#2ecc71"});
+  $(".feedback").show().animate({"opacity":"1", "bottom":"-80px"}, 400);
+  $("input").css({"border-color":"#2ecc71"});
+  return false;
+});
+
+var locked = true;
+function lock() {
+	if (locked) 
+	{
+		document.getElementById("sign").src="lock-open.svg";
+		locked = false;
+	} else {
+		document.getElementById("sign").src="lock.svg";	
+		locked = true;
+	}
+}
+
+function showSign() {
+	document.getElementById("signage").style.display = "block";
+}
+
+//document.cookie = 'foo=bar; Secure;'; // only use https
+//document.cookie = 'foo=bar; Secure; HttpOnly'; //only for server use
+//document.cookie = 'foo=bar; path="/dashboard"'; // check path (domain is automatic)
+//document.cookie = 'foo=bar; expires=Mon, 26 Mar 2018 17:04:05 UTC'; // set expiration, none creates session cookie
+//document.cookie = 'foo=bar; max-age=31536000' //expires in 1 year
+
+// document.cookie stores all as... 'foo1=bar1; foo2=bar2; foo3=bar3'
+
+// "Remember me" option creates expiration, else use session cookies
+
+// for password comparison...
+//var todo = document.getElementById("todo");
+//var todo2 = document.getElementById("todo2");
+
+//if(todo.value !== todo2.value) {
+
+// for email validation...
+function validateEmail(email) {
+  var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
+}
+
+function validate() {
+  var $result = $("#result");
+  var email = $("#email").val();
+  $result.text("");
+
+  if (validateEmail(email)) {
+    $result.text(email + " is valid :)");
+    $result.css("color", "green");
+  } else {
+    $result.text(email + " is not valid :(");
+    $result.css("color", "red");
+  }
+  return false;
+}
+
+</script>
+
+<div class="status">
+   User Sign-In <img onclick="lock();" id="sign" class="icon" src="lock.svg" />
+  <div class="locked"><a href="javascript:showSign();">Sign in</a>&nbsp;&nbsp;<a href="account.htm">Create account</a></div>
+  <div class="unlocked">Hello <span>username</span>&nbsp;&nbsp;<a href="user.htm">Settings</a></div>
+</div>
+
+<div id="signage" class="sign" style="display:none">
+  <div style="padding:8 8 8 8; background-color: lightgray; width: 480px;"><img style="height:24px; width:24px;" src="tree.jpg" /></div><div><img class="icon" src="times-circle" onclick="closeDialog();" /></div>
+  <div class="existing">
+    <span><img class="icon" src="user.svg" /></span><input type="email" placeholder="email" maxlength="48" required />
+	<br/>
+    <span><img class="icon" src="key.svg" /></span><input type="password" placeholder="password" maxlength="48" required />
+	<br/>
+    <input type="checkbox" /> Remember Me
+    <button><img class="icon" src="arrow-right.svg" /></button><button><img class="icon" src="times.svg" /></button>
+	<br/>
+    Not a member?<a href="sign.htm">Sign up</a>&nbsp;&nbsp;<a href="password.htm">Forgot password?</a>
+  </div>
+  <div style="display:none" class="new">
+    <span>Confirm Password</span><input type="password" maxlength="48" required />
+    <button><img class="icon" src="arrow-right.svg" /></button><button><img class="icon" src="times.svg" /></button>
+	"By creating an account you agree to our 'Terms & Privacy'."
+  </div>
+</div>
+
+include shopping cart, settings

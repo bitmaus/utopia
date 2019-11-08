@@ -1,0 +1,487 @@
+
+try adding sms send capability...
+public void sendSMS(String phoneNo, String msg) {
+    try {      
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage(phoneNo, null, msg, null, null);    
+        Toast.makeText(getApplicationContext(), "Message Sent",
+              Toast.LENGTH_LONG).show();
+    } catch (Exception ex) {
+        Toast.makeText(getApplicationContext(),ex.getMessage().toString(),
+              Toast.LENGTH_LONG).show();
+        ex.printStackTrace();
+    } 
+}
+
+...with
+<uses-permission android:name="android.permission.SEND_SMS" /> in AndroidManifest.xml
+
+
+// this is your network socket
+ParcelFileDescriptor pfd = ParcelFileDescriptor.fromSocket(socket);
+mCamera = getCameraInstance();
+mMediaRecorder = new MediaRecorder();
+mCamera.unlock();
+mMediaRecorder.setCamera(mCamera);
+mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
+mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+// this is the unofficially supported MPEG2TS format, suitable for streaming (Android 3.0+)
+mMediaRecorder.setOutputFormat(8);
+mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
+mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
+mediaRecorder.setOutputFile(pfd.getFileDescriptor());
+mMediaRecorder.setPreviewDisplay(mPreview.getHolder().getSurface());
+mMediaRecorder.prepare();
+mMediaRecorder.start();
+On the player side it is a bit tricky, you could try this:
+
+// this is your network socket, connected to the server
+ParcelFileDescriptor pfd = ParcelFileDescriptor.fromSocket(socket);
+mMediaPlayer = new MediaPlayer();
+mMediaPlayer.setDataSource(pfd.getFileDescriptor());
+mMediaPlayer.prepare();
+mMediaPlayer.start();
+
+Unfortunately mediaplayer tends to not like this, so you have a couple of options: either (a) save data from socket to file and (after you have a bit of data) play with mediaplayer from file, or (b) make a tiny http proxy that runs locally and can accept mediaplayer's GET request, reply with HTTP headers, and then copy data from the remote server to it. For (a) you would create the mediaplayer with a file path or file url, for (b) give it a http url pointing to your proxy.
+
+
+Here is the code for the playing side
+
+public class VideoPlayback extends Activity implements Callback {
+MediaPlayer mp;
+private SurfaceView mPreview;
+private SurfaceHolder holder;
+private TextView mTextview;
+public static final int SERVERPORT = 6775;
+public static String SERVERIP="192.168.1.126";
+Socket clientSocket;
+private Handler handler = new Handler();
+/** Called when the activity is first created. */
+@Override
+public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.main);
+    mPreview = (SurfaceView) findViewById(R.id.surfaceView1);
+    mTextview = (TextView) findViewById(R.id.textView1);
+    holder = mPreview.getHolder();
+    holder.addCallback(this);
+    holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+    mTextview.setText("Attempting to connect");
+    mp = new MediaPlayer();
+    Thread t = new Thread(){
+        public void run(){
+            try {
+                    clientSocket = new Socket(SERVERIP,SERVERPORT);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mTextview.setText("Connected to server");
+                    }
+                });
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ParcelFileDescriptor pfd = ParcelFileDescriptor.fromSocket(clientSocket);
+                            pfd.getFileDescriptor().sync();
+                            mp.setDataSource(pfd.getFileDescriptor());
+                            pfd.close();
+                            mp.setDisplay(holder);
+                            mp.prepareAsync();
+                            mp.start();
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+
+            } catch (UnknownHostException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    };
+    t.start();
+}
+And here is the code for the streaming side
+
+public class VideoStreaming extends Activity{
+// User Interface Elements
+VideoView mView;
+TextView connectionStatus;
+SurfaceHolder mHolder;
+// Video variable
+MediaRecorder recorder; 
+// Networking variables
+public static String SERVERIP="";
+public static final int SERVERPORT = 6775;
+private Handler handler = new Handler();
+private ServerSocket serverSocket;  
+/** Called when the activity is first created. */
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.main);
+    // Define UI elements
+    mView = (VideoView) findViewById(R.id.video_preview);
+    connectionStatus = (TextView) findViewById(R.id.connection_status_textview);
+    mHolder = mView.getHolder();
+    mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+    SERVERIP = "192.168.1.126";
+    // Run new thread to handle socket communications
+    Thread sendVideo = new Thread(new SendVideoThread());
+    sendVideo.start();
+}
+ public class SendVideoThread implements Runnable{
+    public void run(){
+        // From Server.java
+        try {
+            if(SERVERIP!=null){
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        connectionStatus.setText("Listening on IP: " + SERVERIP);
+                    }
+                });
+                serverSocket = new ServerSocket(SERVERPORT);
+                while(true) {
+                    //listen for incoming clients
+                    Socket client = serverSocket.accept();
+                    handler.post(new Runnable(){
+                        @Override
+                        public void run(){
+                            connectionStatus.setText("Connected.");
+                        }
+                    });
+                    try{
+                            // Begin video communication
+                            final ParcelFileDescriptor pfd = ParcelFileDescriptor.fromSocket(client);
+                            handler.post(new Runnable(){
+                                @Override
+                                public void run(){
+                                    recorder = new MediaRecorder();
+                                    recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+                                    recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);                 
+                                    recorder.setOutputFile(pfd.getFileDescriptor());
+                                    recorder.setVideoFrameRate(20);
+                                    recorder.setVideoSize(176,144);
+                                    recorder.setVideoEncoder(MediaRecorder.VideoEncoder.H263);
+                                    recorder.setPreviewDisplay(mHolder.getSurface());
+                                    try {
+                                        recorder.prepare();
+                                    } catch (IllegalStateException e) {
+                                        // TODO Auto-generated catch block
+                                        e.printStackTrace();
+                                    } catch (IOException e) {
+                                        // TODO Auto-generated catch block
+                                        e.printStackTrace();
+                                    }
+                                    recorder.start();
+                                }
+                            });
+                    } catch (Exception e) {
+                        handler.post(new Runnable(){
+                            @Override
+                            public void run(){
+                                connectionStatus.setText("Oops.Connection interrupted. Please reconnect your phones.");
+                            }
+                        });
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run(){
+                        connectionStatus.setText("Couldn't detect internet connection.");
+                    }
+                });
+            }
+        } catch (Exception e){
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    connectionStatus.setText("Error");
+                }
+            });
+            e.printStackTrace();
+        }
+        // End from server.java
+    }
+}
+I receive the following error when trying to create the MediaPLayer
+
+05-24 16:25:39.360: ERROR/MediaPlayerService(88): offset error
+05-24 16:25:39.360: ERROR/MediaPlayer(11895): Unable to to create media player
+
+
+With Android 4.4 there is another way to play a live MJPEG stream. The stream you are playing should be broadcast by the other device on a port over UDP. Let's say we have a stream being broadcast on 192.168.0.101:8080. We can play the stream by adding a WebView to our layout. Then in our activity we do the following:
+
+@Override
+public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.mjpeg_activity);
+    // Grab instance of WebView
+    WebView webView = (WebView)findViewById(R.id.webViewStream);
+    // Set page content for webview
+    webView.loadData("<html><head><meta name='viewport' content='target-densitydpi=device-dpi,initial-scale=1,minimum-scale=1,user-scalable=yes'/></head><body><center><img src=\"http://192.168.0.101:8080/\" alt=\"Stream\" align=\"middle\"></center></body></html>", "text/html", null);
+    webView.getSettings().setBuiltInZoomControls(true);
+}
+
+
+...or
+
+Here's how I'm setting up to play a file:
+
+mPlayer.reset();
+try {
+    AssetFileDescriptor afd = getResources().openRawResourceFd(mAudioId);
+    if (afd == null) {
+        Toast.makeText(mOwner, "Could not load sound.",
+                Toast.LENGTH_LONG).show();
+        return;
+    }
+    mPlayer.setDataSource(afd.getFileDescriptor(),
+            afd.getStartOffset(), afd.getLength());
+    afd.close();
+    mPlayer.prepare();
+} catch (Exception e) {
+    Log.d(LOG_TAG, "Could not load sound.", e);
+    Toast.makeText(mOwner, "Could not load sound.", Toast.LENGTH_LONG)
+            .show();
+}
+
+
+
+I recently had to solve a similar problem with video playback. Thanks to MediaPlayer being unable to play an arbitrary InputStream (the API is strangely lame) the solution I came up with was to write a small in-process webserver for serving up local files (on the SD card) over HTTP. MediaPlayer then loads it via a URI of the form http://127.0.0.1:8888/videofilename.
+
+EDIT:
+
+Below is the StreamProxy class I use to feed content into a MediaPlayer instance. The basic use is that you instantiate it, start() it, and set your media player going with something like MediaPlayer.setDataSource("http://127.0.0.1:8888/localfilepath");
+
+I should note that it is rather experimental and probably not entirely bug-free. It was written to solve a similar problem to yours, namely that MediaPlayer cannot play a file that is also being downloaded. Streaming a file locally in this way works around that restriction (i.e. I have a thread downloading the file while the StreamProxy feeds it into mediaplayer).
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
+import android.os.AsyncTask;
+import android.os.Looper;
+import android.util.Log;
+
+public class StreamProxy implements Runnable {
+
+    private static final int SERVER_PORT=8888;
+
+    private Thread thread;
+    private boolean isRunning;
+    private ServerSocket socket;
+    private int port;
+
+    public StreamProxy() {
+
+        // Create listening socket
+        try {
+          socket = new ServerSocket(SERVER_PORT, 0, InetAddress.getByAddress(new byte[] {127,0,0,1}));
+          socket.setSoTimeout(5000);
+          port = socket.getLocalPort();
+        } catch (UnknownHostException e) { // impossible
+        } catch (IOException e) {
+          Log.e(TAG, "IOException initializing server", e);
+        }
+
+    }
+
+    public void start() {
+        thread = new Thread(this);
+        thread.start();
+    }
+
+    public void stop() {
+        isRunning = false;
+        thread.interrupt();
+        try {
+            thread.join(5000);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+    }
+
+    @Override
+      public void run() {
+        Looper.prepare();
+        isRunning = true;
+        while (isRunning) {
+          try {
+            Socket client = socket.accept();
+            if (client == null) {
+              continue;
+            }
+            Log.d(TAG, "client connected");
+
+            StreamToMediaPlayerTask task = new StreamToMediaPlayerTask(client);
+            if (task.processRequest()) {
+                task.execute();
+            }
+
+          } catch (SocketTimeoutException e) {
+            // Do nothing
+          } catch (IOException e) {
+            Log.e(TAG, "Error connecting to client", e);
+          }
+        }
+        Log.d(TAG, "Proxy interrupted. Shutting down.");
+      }
+
+
+
+
+    private class StreamToMediaPlayerTask extends AsyncTask<String, Void, Integer> {
+
+        String localPath;
+        Socket client;
+        int cbSkip;
+
+        public StreamToMediaPlayerTask(Socket client) {
+            this.client = client;
+        }
+
+        public boolean processRequest() {
+            // Read HTTP headers
+            String headers = "";
+            try {
+              headers = Utils.readTextStreamAvailable(client.getInputStream());
+            } catch (IOException e) {
+              Log.e(TAG, "Error reading HTTP request header from stream:", e);
+              return false;
+            }
+
+            // Get the important bits from the headers
+            String[] headerLines = headers.split("\n");
+            String urlLine = headerLines[0];
+            if (!urlLine.startsWith("GET ")) {
+                Log.e(TAG, "Only GET is supported");
+                return false;               
+            }
+            urlLine = urlLine.substring(4);
+            int charPos = urlLine.indexOf(' ');
+            if (charPos != -1) {
+                urlLine = urlLine.substring(1, charPos);
+            }
+            localPath = urlLine;
+
+            // See if there's a "Range:" header
+            for (int i=0 ; i<headerLines.length ; i++) {
+                String headerLine = headerLines[i];
+                if (headerLine.startsWith("Range: bytes=")) {
+                    headerLine = headerLine.substring(13);
+                    charPos = headerLine.indexOf('-');
+                    if (charPos>0) {
+                        headerLine = headerLine.substring(0,charPos);
+                    }
+                    cbSkip = Integer.parseInt(headerLine);
+                }
+            }
+            return true;
+        }
+
+        @Override
+        protected Integer doInBackground(String... params) {
+
+                        long fileSize = GET CONTENT LENGTH HERE;
+
+            // Create HTTP header
+            String headers = "HTTP/1.0 200 OK\r\n";
+            headers += "Content-Type: " + MIME TYPE HERE + "\r\n";
+            headers += "Content-Length: " + fileSize  + "\r\n";
+            headers += "Connection: close\r\n";
+            headers += "\r\n";
+
+            // Begin with HTTP header
+            int fc = 0;
+            long cbToSend = fileSize - cbSkip;
+            OutputStream output = null;
+            byte[] buff = new byte[64 * 1024];
+            try {
+                output = new BufferedOutputStream(client.getOutputStream(), 32*1024);                           
+                output.write(headers.getBytes());
+
+                // Loop as long as there's stuff to send
+                while (isRunning && cbToSend>0 && !client.isClosed()) {
+
+                    // See if there's more to send
+                    File file = new File(localPath);
+                    fc++;
+                    int cbSentThisBatch = 0;
+                    if (file.exists()) {
+                        FileInputStream input = new FileInputStream(file);
+                        input.skip(cbSkip);
+                        int cbToSendThisBatch = input.available();
+                        while (cbToSendThisBatch > 0) {
+                            int cbToRead = Math.min(cbToSendThisBatch, buff.length);
+                            int cbRead = input.read(buff, 0, cbToRead);
+                            if (cbRead == -1) {
+                                break;
+                            }
+                            cbToSendThisBatch -= cbRead;
+                            cbToSend -= cbRead;
+                            output.write(buff, 0, cbRead);
+                            output.flush();
+                            cbSkip += cbRead;
+                            cbSentThisBatch += cbRead;
+                        }
+                        input.close();
+                    }
+
+                    // If we did nothing this batch, block for a second
+                    if (cbSentThisBatch == 0) {
+                        Log.d(TAG, "Blocking until more data appears");
+                        Thread.sleep(1000);
+                    }
+                }
+            }
+            catch (SocketException socketException) {
+                Log.e(TAG, "SocketException() thrown, proxy client has probably closed. This can exit harmlessly");
+            }
+            catch (Exception e) {
+                Log.e(TAG, "Exception thrown from streaming task:");
+                Log.e(TAG, e.getClass().getName() + " : " + e.getLocalizedMessage());
+                e.printStackTrace();                
+            }
+
+            // Cleanup
+            try {
+                if (output != null) {
+                    output.close();
+                }
+                client.close();
+            }
+            catch (IOException e) {
+                Log.e(TAG, "IOException while cleaning up streaming task:");                
+                Log.e(TAG, e.getClass().getName() + " : " + e.getLocalizedMessage());
+                e.printStackTrace();                
+            }
+
+            return 1;
+        }
+
+    }
+}
+
+
+bluetooth android...
+https://developer.android.com/reference/android/bluetooth/BluetoothGattServer
+
+https://www.androidcode.ninja/android-bluetooth-tutorial/

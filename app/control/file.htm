@@ -1,0 +1,198 @@
+<input  id="file_input"  type="file" webkitdirectory directory  /> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+
+
+var filenames=[], foldernames=[];
+
+$.get("file:///C:/Users/v-masebo/Desktop",function(response){
+    document.write(response);
+    getNames();
+});
+
+function getNames()
+{
+    var files = document.querySelectorAll("a.icon.file");
+    var folders = document.querySelectorAll("a.icon.dir");
+    files.forEach(function(item){filenames.push(item.textContent)})
+    folders.forEach(function(item){foldernames.push(item.textContent.slice(0,-1))})
+    console.log(filenames);
+    console.log(foldernames);
+}
+    </script>
+
+    <style>
+#dropzone {
+  text-align: center;
+  width: 300px;
+  height: 100px;
+  margin: 10px;
+  padding: 10px;
+  border: 4px dashed red;
+  border-radius: 10px;
+}
+
+#boxtitle {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  color: black;
+  font: bold 2em "Arial", sans-serif;
+  width: 300px;
+  height: 100px;
+}
+
+body {
+  font: 14px "Arial", sans-serif;
+}
+</style>
+<p>Drag files and/or directories to the box below!</p>
+
+<div id="dropzone">
+  <div id="boxtitle">
+    Drop Files Here
+  </div>
+</div>
+
+<h2>Directory tree:</h2>
+
+<ul id="listing">
+</ul>
+
+<script>
+
+let dropzone = document.getElementById("dropzone");
+let listing = document.getElementById("listing");
+//handle files dropped in
+function scanFiles(item, container) {
+  let elem = document.createElement("li");
+  elem.innerHTML = item.name;
+  container.appendChild(elem);
+ 
+ if (item.isDirectory) {
+    let directoryReader = item.createReader();
+    let directoryContainer = document.createElement("ul");
+    container.appendChild(directoryContainer);
+    directoryReader.readEntries(function(entries) {
+        entries.forEach(function(entry) {
+          scanFiles(entry, directoryContainer);
+      });
+    });
+  }
+}
+//prevent default dragover behavior
+dropzone.addEventListener("dragover", function(event) {
+    event.preventDefault();
+}, false);
+//handle the drop event
+dropzone.addEventListener("drop", function(event) {
+  let items = event.dataTransfer.items;
+  alert(items[0].webkitGetAsEntry());
+  event.preventDefault();
+  listing.innerHTML = "";
+ 
+  for (let i=0; i<items.length; i++) {
+    let item = items[i].webkitGetAsEntry();
+    
+    if (item) {
+        scanFiles(item, listing);
+    }
+  }
+}, false);
+
+
+</script>
+
+download.svg, file-alt.svg, file-signature.svg, folder.svg, folder-minus.svg, folder-open.svg, folder-plus.svg, upload.svg
+
+from media...
+
+play.svg, pause.svg, stop.svg, backward.svg, forward.svg, fast-backward.svg, fast-forward.svg, film.svg, music.svg, rss-square.svg, step-backward.svg, step-forward.svg
+
+//broadcasting side 
+  navigator.mediaDevices.getUserMedia({audio: true,video: false}) // request cam
+        .then(stream => {
+         vid.srcObject = stream;
+         context = new AudioContext();
+         var source = context.createMediaStreamSource(stream);
+         var processor = context.createScriptProcessor(1024, 2, 2);
+         source.connect(processor);
+         processor.connect(context.destination);
+
+         processor.onaudioprocess = function(e) {
+           audiodata = e.inputBuffer.getChannelData(1);
+          socket.send(JSON.stringify({sound: audiodata, to: to, from: '$username', text:''}));
+         };
+         return vid.play(); // returns a Promise
+       });
+
+//receiving side object to array 
+       if(typeof (message.sound) != "undefined"){
+         //$('#video_stream_btn').trigger('click');
+          var json_sound = message.sound;
+          var array_sound = [];
+          for(var i in json_sound){
+            array_sound.push([i, json_sound [i]]);
+          }
+         if(typeof(context) == 'undefined'){
+           context = new AudioContext();
+         }
+         play_sound(array_sound, context);
+         return;
+       }
+
+// receiving side play sound function 
+    function play_sound(raw,context){
+        var audioBuffer = context.createBuffer(1, raw.length, context.sampleRate);
+        audioBuffer.getChannelData(0).set(raw);
+        var source = context.createBufferSource();
+        source.buffer = audioBuffer;
+        source.connect(context.destination);
+        source.start(0);
+    }
+
+navigator.mediaDevices.getUserMedia({audio: {sampleSize: 16, channelCount: 2},video: true}) // request cam
+        .then(stream => {
+         vid.srcObject = stream; // don't use createObjectURL(MediaStream)
+         context = new AudioContext();
+         var source = context.createMediaStreamSource(stream);
+         var processor = context.createScriptProcessor(1024, 2, 2);
+         source.connect(processor);
+         processor.connect(context.destination);
+
+         processor.onaudioprocess = function(e) {
+          // Do something with the data, i.e Convert this to WAV
+          audiodata = new Int16Array(convertFloat32ToInt16(e.inputBuffer.getChannelData(0)));
+          console.log(audiodata);
+          socket.send(JSON.stringify({sound: audiodata, to: to, from: '$username', text:''}));
+
+         };
+         return vid.play(); // returns a Promise
+       });
+
+function convertFloat32ToInt16(buffer){
+          l = buffer.length;
+          buf = new Int16Array(l);
+
+      while (l--) { buf[l] = Math.min(1, buffer[l])*0x7FFF; }
+
+      return buf.buffer; }
+
+if(typeof (message.sound) != "undefined"){
+         if(typeof(context) == 'undefined'){context = new AudioContext();}
+         sound_array = [];
+         for (i in message.sound){sound_array[i] = (message.sound [i]);}
+
+        sound_array32 = int16ToFloat32(sound_array);
+         play_sound(sound_array32, context);
+         return;}
+
+function int16ToFloat32(inputArray) {
+        let int16arr = new Int16Array(inputArray)
+        var output = new Float32Array(int16arr.length);
+        for (var i = 0; i < int16arr.length; i++) {
+            var int = int16arr[i];
+            var float = (int >= 0x8000) ? -(0x10000 - int) / 0x8000 : int / 0x7FFF;
+            output[i] = float;
+        }
+        return output;}

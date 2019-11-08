@@ -1,0 +1,3 @@
+UTC time (Coordinated Universal Time)
+
+Local mean solar time at Royal Observatory, Greenwich in England was chosen to define the Universal day
