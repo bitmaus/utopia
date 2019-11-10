@@ -253,7 +253,7 @@ git remote add upstream https://github.com/whoever/whatever.git
 git fetch upstream
 git pull upstream master
 
-## [Android](https://www.android.com) setup for Google Play (and ad revenue)
+## [Android]() setup for Google Play (and ad revenue)
 
 ```
 AAPT="/path/to/android-sdk/build-tools/23.0.3/aapt"
