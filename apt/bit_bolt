@@ -4,7 +4,7 @@
 
 1. Use a Linux machine (and starter USB), then use `fdisk -l` to find address. For Windows, use [Rufus](https://rufus.ie).
 
-1. Go to [Arch Linux](https://www.archlinux.org) and download ISO image. (security checksum?)
+1. Go to [Arch Linux]() and download ISO image. (security checksum?)
 `dd if=archlinux.iso of=/dev/sdX bs=16M && sync # image starter USB`
 
 1. Use function keys (Esc, F8 or F10) to boot from USB into Arch Linux.
@@ -32,7 +32,7 @@ convert -resize 640x480 -depth 16 -colors 65536 my_custom_image.png splash.png
 
 ## bit 
 
-1. Get https://chrome.google.com/webstore/detail/secure-shell-app/pnhechapfaindjhompbnflcldabbghjo?hl=en
+1. Get 
 
 1. Mount the fat and ext4 extra partitions.
 
@@ -40,7 +40,7 @@ convert -resize 640x480 -depth 16 -colors 65536 my_custom_image.png splash.png
 
 - SSH
 ```
-ssh-keygen -t rsa -b 4096 -f ~/.ssh/secret.key
+
 ssh-keygen -y -f ~/.ssh/secret.key > ~/.ssh/public.key #needed?
 ```
 - SSL, use `certbot certonly --standalone` or `certbot renew` and see `/etc/letsencrypt/live/<domain>/fullchain.pem|privkey.pem`.
