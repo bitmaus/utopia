@@ -1,1 +1,1 @@
-google-chrome-stable --no-sandbox
+google-chrome-stable --window-size=2560,1440 --no-sandbox --disable-web-security --user-data-dir="~/bit/utopia" file:///~/bit/utopia/apa.htm
