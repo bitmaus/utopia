@@ -3,7 +3,7 @@
 
 A self-propagating stack of infinitive-basis, built on L2 (LAMP 2.0).
 
-[!utopia](apt/utopia.png)
+![utopia](apt/utopia.png)
 
 The stack is organized as:
 
@@ -39,30 +39,31 @@ To run Arch Linux, download the [Arch Linux ISO](https://www.archlinux.org/downl
 
 1. Insert a USB, find its path and run `fdisk /dev/<pathToUSB>` to partition.
 
-**fdisk** commands
-|Command|Description|
-|-|-|
-|o|Clears the partition table.|
-|n|Creates a new partition, must specify primary/extended, number, start, end.|
-|t|Change the type of the partition. Use b for Windows, 8300 for Linux.|
-|a|Select your boot partition.|
-|w|Write changes to disk.|
+ **fdisk** commands
 
-With the commands above, create three partitions as follows:
+ |Command|Description|
+ |-|-|
+ |o|Clears the partition table.|
+ |n|Creates a new partition, must specify primary/extended, number, start, end.|
+ |t|Change the type of the partition. Use b for Windows, 8300 for Linux.|
+ |a|Select your boot partition.|
+ |w|Write changes to disk.|
 
-- primary, 1, type Windows, size `+1G`
-- primary, 2, type Linux, size `+1G`
-- primary, 3, type Linux, size remaining space, bootable
+ With the commands above, create three partitions as follows:
+
+ - primary, 1, type Windows, size `+1G`
+ - primary, 2, type Linux, size `+1G`
+ - primary, 3, type Linux, size remaining space, bootable
 
 1. Next, format any Windows partitions with `mkfs.fat /dev/sdaX` and Linux partitons with `mkfs.ext4 /dev/sdaX`.
 
 1. For network access, use the following:
 
-```bash
-ip link show # list network devices
-wifi-menu <device> # connect wireless
-ping google.com -c 2 # test network
-```
+ ```bash
+ ip link show # list network devices
+ wifi-menu <device> # connect wireless
+ ping google.com -c 2 # test network
+ ```
 
 1. Mount, install system files, generate file configuration, and change into the new system's root:
 
