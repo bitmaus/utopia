@@ -114,7 +114,7 @@ USER_NAME='bit'
 USER_PASSWORD='bitmaus' # leave blank to be prompted
 TIMEZONE='America/Los_Angeles'
 
-PACKAGES='nano openssh sudo git haproxy python python-pip wget gnupg certbot dialog wpa_supplicant dhcpcd netctl syslinux dhcp xorg-server xorg-xhost xorg-xrandr xorg-xinit xf86-video-intel xterm mesa ntp alsa-utils arch-install-scripts'
+PACKAGES=''
 #imagemagick jdk8-openjdk repo tigervnc rsync hostapd dnsmasq 
 
 s

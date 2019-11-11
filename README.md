@@ -3,18 +3,18 @@
 
 A self-propagating stack of infinitive-basis, built on L2 (LAMP 2.0).
 
-<img src="apt/utopia.png" width="48" height="48" />
+[!utopia](apt/utopia.png)
 
 The stack is organized as:
 
-- ap**U** (system files for a working Linux client/server distro)
-- ap**T** (resource files for non-functioning items like images and documents)
-- ap**O** (project files for external frameworks like Android and iOS)
-- ap**P** (application files for internal site framework)
-- ap**I** (service files for server processes to handle data, mail, etc.)
-- ap**A** (site index that ties everything together)
+- ap(**U**), system files for a working Linux client/server distro
+- ap(**T**), resource files for non-functioning items like images and documents
+- ap(**O**), project files for external frameworks like [Android](https://www.android.com) and [iOS](https://developer.apple.com/ios/)
+- ap(**P**), application files for internal site framework using HTML, CSS, and JS
+- ap(**I**), service files for server processes to handle data, mail, etc.
+- ap(**A**), site index that ties everything together
 
-**L2** includes:
+The LAMP 2.0 build (**L2**) includes:
 
 - [Linux](https://en.wikipedia.org/wiki/Linux)
 - [Arch Linux](https://www.archlinux.org)
@@ -23,14 +23,23 @@ The stack is organized as:
 
 ### apU
 
-Steps to build a bootable client/server USB. Nicknamed the *bit bolt*, this USB serves as both working client via browser and command-line, or a distributable server. To start you will need two USBs and a computer that allows booting from USB.
+Build a bootable client/server USB, nicknamed the **Bit Bolt**, that serves as both a working client and a distributable server. To start you will need:
 
-1. Insert the first USB and find its path with `fdisk -l` or a file manager. Next download the [Arch Linux ISO](https://www.archlinux.org/download/) and use the command `dd if=<pathToArchISO> of=/dev/sdX bs=16M && sync`, or for Windows download and run [Rufus](https://rufus.ie).
+- a USB (16GB or higher)
+- a laptop running Arch Linux
 
-1. Reboot with USB still inserted, and use function keys (Esc, F8, F10) to boot into Arch Linux.
+To run Arch Linux, download the [Arch Linux ISO](https://www.archlinux.org/download/) and insert a separate USB.
 
-1. Insert a second USB designated as the "bit bolt", find its path and run `fdisk /dev/<pathToUSB>` to partition. Some basic commands include:
+- For Linux/Mac, use command `fdisk -l` to find the USB, then `dd if=<pathToArchISO> of=/dev/sdX bs=16M && sync` to image.
+- For Windows, find the USB using the file manager, then download and run [Rufus](https://rufus.ie).
 
+ After the USB is imaged, reboot and press the function keys (Esc, F8, F10, etc. depending on your computer) to start Arch Linux.
+
+#### the Bit Bolt USB
+
+1. Insert a USB, find its path and run `fdisk /dev/<pathToUSB>` to partition.
+
+**fdisk** commands
 |Command|Description|
 |-|-|
 |o|Clears the partition table.|
@@ -39,15 +48,13 @@ Steps to build a bootable client/server USB. Nicknamed the *bit bolt*, this USB 
 |a|Select your boot partition.|
 |w|Write changes to disk.|
 
-  Use these commands to create your partitions as follows:
+With the commands above, create three partitions as follows:
 
-|Partition|Description|
-|-|-|
-|1|Windows client files (1G)|
-|2|Linux client files (1G)|
-|3|System files for Linux (remaining space)|
+- primary, 1, type Windows, size `+1G`
+- primary, 2, type Linux, size `+1G`
+- primary, 3, type Linux, size remaining space, bootable
 
-1. Format any Windows partitions with `mkfs.fat <drive>` and Linux partitons with `mkfs.ext4 /dev/sdaX`.
+1. Next, format any Windows partitions with `mkfs.fat /dev/sdaX` and Linux partitons with `mkfs.ext4 /dev/sdaX`.
 
 1. For network access, use the following:
 
@@ -66,21 +73,21 @@ genfstab -U /mnt >> /mnt/etc/fstab
 arch-chroot /mnt /bin/bash
 ```
 
-1. In the new system, install your client/server setup:
+1. Install additional system files and configure system:
 
 ```bash
 pacman-key --init
 pacman-key --populate archlinux
-pacman -Sy --noconfirm $PACKAGES
+pacman -Sy --noconfirm nano openssh sudo git haproxy python python-pip wget gnupg certbot dialog wpa_supplicant dhcpcd netctl syslinux dhcp xorg-server xorg-xhost xorg-xrandr xorg-xinit xf86-video-intel xterm mesa ntp alsa-utils arch-install-scripts
 
 echo "box" > /etc/hostname
 cat "8.8.8.8" >> /etc/resolv.conf # Google
 
-echo -en "$ROOT_PASSWORD\n$ROOT_PASSWORD" | passwd
-useradd -m -g users -G wheel $USER
-echo -en "$USER_PASSWORD\n$USER_PASSWORD" | passwd $USER
+passwd
+useradd -m -g users -G wheel bitmaus
+passwd bitmaus
 
-echo "$USER ALL=(ALL:ALL) ALL" >> /etc/sudoers
+echo "bitmaus ALL=(ALL:ALL) ALL" >> /etc/sudoers
 echo "%wheel   ALL=(ALL)   ALL" >> /etc/sudoers
 
 ln -sf /usr/share/zoneinfo/Region/City /etc/localtime
@@ -88,26 +95,26 @@ timedatectl set-timezone $TIMEZONE
 ntpd -qg
 hwclock --systohc
 
-cat "AllowUsers $USER" >> /etc/ssh/sshd_config
-cat "AllowGroups wheel" >> /etc/ssh/sshd_config
-cat "Port 22" >> /etc/ssh/sshd_config
-cat "AuthorizedKeysFile ~/.ssh/authorized_keys" >> /etc/ssh/sshd_config
-cat "AuthenticationMethods publickey" >> /etc/ssh/sshd_config #password?
+echo "AllowUsers bitmaus" >> /etc/ssh/sshd_config
+echo "AllowGroups wheel" >> /etc/ssh/sshd_config
+echo "Port 22" >> /etc/ssh/sshd_config
+echo "AuthorizedKeysFile ~/.ssh/authorized_keys" >> /etc/ssh/sshd_config
+echo "AuthenticationMethods publickey" >> /etc/ssh/sshd_config #password?
 
 syslinux-install_update -iam
 
-git clone tree
+git clone https://github.com/bitmaus/utopia
 
-cp ~/tree/splash.png /boot/syslinux/splash.png
-cp ~/tree/syslinux.cfg /boot/syslinux/syslinux.cfg
+cp ~/utopia/apu/splash.png /boot/syslinux/splash.png
+cp ~/utopia/apu/syslinux.cfg /boot/syslinux/syslinux.cfg
 
-#Remove `fsck` from `mkinit`... (/etc/mkinitcpio.conf)
+# remove `fsck` from /etc/mkinitcpio.conf
 
 cp /usr/lib/systemd/system/systemd-fsck-root.service /etc/systemd/system/systemd-fsck-root.service
 cp /usr/lib/systemd/system/systemd-fsck@.service /etc/systemd/system/systemd-fsck@.service
 
-cat "StandardOutput=null" >> /etc/systemd/system/systemd-fsck@.service
-cat "StandardError=journal+console" >> /etc/systemd/system/systemd-fsck@.service
+echo "StandardOutput=null" >> /etc/systemd/system/systemd-fsck@.service
+echo "StandardError=journal+console" >> /etc/systemd/system/systemd-fsck@.service
 
 mkinitcpio -p linux
 
@@ -125,12 +132,16 @@ makepkg -si --noconfirm
 cd ~/google-chrome
 makepkg -si --noconfirm
 
+exit
+
 pip install tornado pymongo pycrypto markdown
 
 amixer sset Master unmute
+
+poweroff
 ```
 
-1. Remove the Arch USB and boot into the BitBolt USB, which starts with a command-prompt, sign in with user `bit` and password `bitmaus`.
+1. Reboot into the BitBolt USB and sign in with user `bitmaus` and password `bitmaus`.
 
 1. Run `systemctl edit getty@tty1` and replace the contents with:
 
@@ -142,25 +153,27 @@ ExecStart=-/usr/bin/agetty --skip-login --nonewline --noissue username --noclear
 
 Your working BitBolt is complete! See below on how to run the client or install the server.
 
-- the "bit" client features the [Google Chrome](https://www.google.com/chrome/) web browser featuring the [SSH](https://chrome.google.com/webstore/detail/secure-shell-app/pnhechapfaindjhompbnflcldabbghjo?hl=en) extension for command-line work.
+#### the bit client
 
- For basic setup, you need to create security keys:
+In client mode, use the [Google Chrome](https://www.google.com/chrome/) web browser and the [SSH](https://chrome.google.com/webstore/detail/secure-shell-app/pnhechapfaindjhompbnflcldabbghjo?hl=en) extension for command-line work.
 
-  - [SSH](https://en.wikipedia.org/wiki/Secure_Shell), create a key using `ssh-keygen -t rsa -b 4096 -f secret.key`.
+For basic security, create the following:
 
-  - [TLS/SSL](https://en.wikipedia.org/wiki/Transport_Layer_Security), use `certbot certonly --standalone` or `certbot renew` and see `/etc/letsencrypt/live/<domain>/fullchain.pem|privkey.pem`.
+- [SSH](https://en.wikipedia.org/wiki/Secure_Shell), create a key using `ssh-keygen -t rsa -b 4096 -f secret.key`
 
-  - [LUKS](https://en.wikipedia.org/wiki/Linux_Unified_Key_Setup), use `dd if=/dev/urandom of=KEYFILE bs=1 count=4096`
+- [TLS/SSL](https://en.wikipedia.org/wiki/Transport_Layer_Security), use `certbot certonly --standalone` or `certbot renew` and see */etc/letsencrypt/live/<domain>/fullchain.pem|privkey.pem*.
 
-  - GPG, or [GNU Privacy Guard](https://www.gnupg.org/), used for personal signing and encryption, good for private dealings
+- [LUKS](https://en.wikipedia.org/wiki/Linux_Unified_Key_Setup), use `dd if=/dev/urandom of=KEYFILE bs=1 count=4096`
 
-  ```bash
-  gpg --gen-key
-  gpg --output ~/mygpg.key --armor --export your_email@address.com
-  gpg --send-keys your_email@address.com --keyserver hkp://subkeys.pgp.net
-  ```
+- GPG, or [GNU Privacy Guard](https://www.gnupg.org/), used for personal signing and encryption, good for private dealings
 
-  - [Monero], run below, then use `./monerod` to update chain or `address` to display your wallet.
+```bash
+gpg --gen-key
+gpg --output ~/mygpg.key --armor --export your_email@address.com
+gpg --send-keys your_email@address.com --keyserver hkp://subkeys.pgp.net
+```
+
+- [Monero](https://en.wikipedia.org/wiki/Monero_(cryptocurrency)), run below, then use `./monerod` to update chain or `address` to display your wallet.
 
 ```bash
 wget https://downloads.getmonero.org/linux64
@@ -168,13 +181,11 @@ tar -xvf linux64
 ./monero-wallet-cli
 ```
 
- After setup, either start a server or run the browser using `xinit xinitrc`.
+To run the browser use `xinit ~/utopia/apu/xinitrc`.
 
-- the "bolt" server features an easy way to transfer the system files and start services to handle your applications, data, email, etc.
+#### the bolt server
 
- To propagate the server,
-
-  1. Partition, format, and mount the drive with:
+To start a server, partition, format, and mount the drive with:
 
 ```bash
 parted -s <drive> mkpart primary ext4 1 100%
@@ -182,7 +193,7 @@ mkfs.ext4 <drive>
 mount <drive> /mnt
 ```
 
-  1. (optional) For encryption,
+*(optional)* For encryption:
 
 ```bash
 dd if=/dev/urandom of=/dev/sdd bs=1M
@@ -191,15 +202,15 @@ cryptsetup luksAddKey /dev/sda2 ~/tree/drive.key
 cryptsetup open --type luks "$dev" bolt --key-file ~/tree/drive.key
 ```
 
-  1. Propagate the stack with,
+Then, propagate the stack with:
 
 ```bash
-cp -ax / /mnt`
+cp -ax / /mnt
 cp /temp/public.key >> /mnt/home/tree?/.ssh/authorized_keys
 cp /temp/ssl_certs >> /mnt/home/ssl_certs
-```
 
-  1. Start the server with `systemd-nspawn -b -D /mnt`
+systemd-nspawn -b -D /mnt
+```
 
 ### apT
 
