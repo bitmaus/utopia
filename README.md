@@ -3,7 +3,7 @@
 
 A self-propagating stack of infinitive-basis, built on L2 (LAMP 2.0).
 
-![utopia](apt/utopia.png)
+![utopia](/apt/utopia.png)
 
 The stack is organized as:
 
@@ -39,8 +39,6 @@ To run Arch Linux, download the [Arch Linux ISO](https://www.archlinux.org/downl
 
 1. Insert a USB, find its path and run `fdisk /dev/<pathToUSB>` to partition.
 
-   **fdisk** commands
-
    |Command|Description|
    |-|-|
    |o|Clears the partition table.|
@@ -48,6 +46,8 @@ To run Arch Linux, download the [Arch Linux ISO](https://www.archlinux.org/downl
    |t|Change the type of the partition. Use b for Windows, 8300 for Linux.|
    |a|Select your boot partition.|
    |w|Write changes to disk.|
+
+   **fdisk** commands
 
    With the commands above, create three partitions as follows:
 
@@ -67,90 +67,90 @@ To run Arch Linux, download the [Arch Linux ISO](https://www.archlinux.org/downl
 
 1. Mount, install system files, generate file configuration, and change into the new system's root:
 
-```bash
-mount /dev/sdaX /mnt
-pacstrap /mnt base base-devel linux linux-firmware
-genfstab -U /mnt >> /mnt/etc/fstab
-arch-chroot /mnt /bin/bash
-```
+   ```bash
+   mount /dev/sdaX /mnt
+   pacstrap /mnt base base-devel linux linux-firmware
+   genfstab -U /mnt >> /mnt/etc/fstab
+   arch-chroot /mnt /bin/bash
+   ```
 
 1. Install additional system files and configure system:
 
-```bash
-pacman-key --init
-pacman-key --populate archlinux
-pacman -Sy --noconfirm nano openssh sudo git haproxy python python-pip wget gnupg certbot dialog wpa_supplicant dhcpcd netctl syslinux dhcp xorg-server xorg-xhost xorg-xrandr xorg-xinit xf86-video-intel xterm mesa ntp alsa-utils arch-install-scripts
+   ```bash
+   pacman-key --init
+   pacman-key --populate archlinux
+   pacman -Sy --noconfirm nano openssh sudo git haproxy python python-pip wget gnupg certbot dialog wpa_supplicant dhcpcd netctl syslinux dhcp xorg-server xorg-xhost xorg-xrandr xorg-xinit xf86-video-intel xterm mesa ntp alsa-utils arch-install-scripts
 
-echo "box" > /etc/hostname
-cat "8.8.8.8" >> /etc/resolv.conf # Google
+   echo "box" > /etc/hostname
+   cat "8.8.8.8" >> /etc/resolv.conf # Google
 
-passwd
-useradd -m -g users -G wheel bitmaus
-passwd bitmaus
+   passwd
+   useradd -m -g users -G wheel bitmaus
+   passwd bitmaus
 
-echo "bitmaus ALL=(ALL:ALL) ALL" >> /etc/sudoers
-echo "%wheel   ALL=(ALL)   ALL" >> /etc/sudoers
+   echo "bitmaus ALL=(ALL:ALL) ALL" >> /etc/sudoers
+   echo "%wheel   ALL=(ALL)   ALL" >> /etc/sudoers
 
-ln -sf /usr/share/zoneinfo/Region/City /etc/localtime
-timedatectl set-timezone $TIMEZONE
-ntpd -qg
-hwclock --systohc
+   ln -sf /usr/share/zoneinfo/Region/City /etc/localtime
+   timedatectl set-timezone $TIMEZONE
+   ntpd -qg
+   hwclock --systohc
 
-echo "AllowUsers bitmaus" >> /etc/ssh/sshd_config
-echo "AllowGroups wheel" >> /etc/ssh/sshd_config
-echo "Port 22" >> /etc/ssh/sshd_config
-echo "AuthorizedKeysFile ~/.ssh/authorized_keys" >> /etc/ssh/sshd_config
-echo "AuthenticationMethods publickey" >> /etc/ssh/sshd_config #password?
+   echo "AllowUsers bitmaus" >> /etc/ssh/sshd_config
+   echo "AllowGroups wheel" >> /etc/ssh/sshd_config
+   echo "Port 22" >> /etc/ssh/sshd_config
+   echo "AuthorizedKeysFile ~/.ssh/authorized_keys" >> /etc/ssh/sshd_config
+   echo "AuthenticationMethods publickey" >> /etc/ssh/sshd_config #password?
 
-syslinux-install_update -iam
+   syslinux-install_update -iam
 
-git clone https://github.com/bitmaus/utopia
+   git clone https://github.com/bitmaus/utopia
 
-cp ~/utopia/apu/splash.png /boot/syslinux/splash.png
-cp ~/utopia/apu/syslinux.cfg /boot/syslinux/syslinux.cfg
+   cp ~/utopia/apu/splash.png /boot/syslinux/splash.png
+   cp ~/utopia/apu/syslinux.cfg /boot/syslinux/syslinux.cfg
 
-# remove `fsck` from /etc/mkinitcpio.conf
+   # remove `fsck` from /etc/mkinitcpio.conf
 
-cp /usr/lib/systemd/system/systemd-fsck-root.service /etc/systemd/system/systemd-fsck-root.service
-cp /usr/lib/systemd/system/systemd-fsck@.service /etc/systemd/system/systemd-fsck@.service
+   cp /usr/lib/systemd/system/systemd-fsck-root.service /etc/systemd/system/systemd-fsck-root.service
+   cp /usr/lib/systemd/system/systemd-fsck@.service /etc/systemd/system/systemd-fsck@.service
 
-echo "StandardOutput=null" >> /etc/systemd/system/systemd-fsck@.service
-echo "StandardError=journal+console" >> /etc/systemd/system/systemd-fsck@.service
+   echo "StandardOutput=null" >> /etc/systemd/system/systemd-fsck@.service
+   echo "StandardError=journal+console" >> /etc/systemd/system/systemd-fsck@.service
 
-mkinitcpio -p linux
+   mkinitcpio -p linux
 
-su tree
+   su tree
 
-git clone https://aur.archlinux.org/mongodb-bin.git
-git clone https://aur.archlinux.org/mongodb-tools-bin.git
-git clone https://aur.archlinux.org/google-chrome.git
-#git clone https://aur.archlinux.org/aosp-devel.git
+   git clone https://aur.archlinux.org/mongodb-bin.git
+   git clone https://aur.archlinux.org/mongodb-tools-bin.git
+   git clone https://aur.archlinux.org/google-chrome.git
+   #git clone https://aur.archlinux.org/aosp-devel.git
 
-cd ~/mongodb-bin
-makepkg -si --noconfirm # repeat steps for each repo
-cd ~/mongodb-tools-bin
-makepkg -si --noconfirm
-cd ~/google-chrome
-makepkg -si --noconfirm
+   cd ~/mongodb-bin
+   makepkg -si --noconfirm # repeat steps for each repo
+   cd ~/mongodb-tools-bin
+   makepkg -si --noconfirm
+   cd ~/google-chrome
+   makepkg -si --noconfirm
 
-exit
+   exit
 
-pip install tornado pymongo pycrypto markdown
+   pip install tornado pymongo pycrypto markdown
 
-amixer sset Master unmute
+   amixer sset Master unmute
 
-poweroff
-```
+   poweroff
+   ```
 
 1. Reboot into the BitBolt USB and sign in with user `bitmaus` and password `bitmaus`.
 
 1. Run `systemctl edit getty@tty1` and replace the contents with:
 
-```
-[Service]
-ExecStart=
-ExecStart=-/usr/bin/agetty --skip-login --nonewline --noissue username --noclear %I $TERM
-```
+   ```
+   [Service]
+   ExecStart=
+   ExecStart=-/usr/bin/agetty --skip-login --nonewline --noissue username --noclear %I $TERM
+   ```
 
 Your working BitBolt is complete! See below on how to run the client or install the server.
 
@@ -168,19 +168,19 @@ For basic security, create the following:
 
 - GPG, or [GNU Privacy Guard](https://www.gnupg.org/), used for personal signing and encryption, good for private dealings
 
-```bash
-gpg --gen-key
-gpg --output ~/mygpg.key --armor --export your_email@address.com
-gpg --send-keys your_email@address.com --keyserver hkp://subkeys.pgp.net
-```
+   ```bash
+   gpg --gen-key
+   gpg --output ~/mygpg.key --armor --export your_email@address.com
+   gpg --send-keys your_email@address.com --keyserver hkp://subkeys.pgp.net
+   ```
 
 - [Monero](https://en.wikipedia.org/wiki/Monero_(cryptocurrency)), run below, then use `./monerod` to update chain or `address` to display your wallet.
 
-```bash
-wget https://downloads.getmonero.org/linux64
-tar -xvf linux64
-./monero-wallet-cli
-```
+   ```bash
+   wget https://downloads.getmonero.org/linux64
+   tar -xvf linux64
+   ./monero-wallet-cli
+   ```
 
 To run the browser use `xinit ~/utopia/apu/xinitrc`.
 
