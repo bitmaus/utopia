@@ -14,13 +14,70 @@ import hashlib
 
 client = pymongo.MongoClient("mongodb://localhost:27017/")
 database = client["tree"]
-collection = database["token"]
-        
-def post(self):
-        # token system
-        email = self.get_body_argument("email", default=None, strip=False)
-        query = { "email": email }
-        self.write(dumps(collection.find(query)))
+collection = database["tokens"]
+
+# secure cookies sent from tornado...
+
+def process(token, status, hash):
+    #...generate token
+    process_token = secrets.token_hex(16)
+    
+    if status == "initiate":
+        collection.insert_one({'client_token':token,'server_token':process_token,'status':status})
+    elif status == "authenticate":
+        #...client has used token to create/send password hash and token2
+        query = {'client_token':token, 'server_token':server_token, 'status':'initiate'}
+        result = collection.find(query)
+
+        if result:
+            user = hash.user
+            password = hash.password
+            token = hash.token
+
+            exists_query = {"user":user, "password":password, "client_token":token, "email":"true"}
+            result = collection.find(query)
+
+            if result:
+                value = { "$set": { "client_token":token, "server_token":process_token, "status":status } }
+                collection.update_one(exists_query, value))
+            else:
+                value = { "$set": { "user":user, "password":password, "client_token":token, "server_token":process_token, "status":status, "email":"false" } }
+                collection.update_one(query, value)
+                # send email with new server_token...
+    elif status == "authorize":
+        query = {'client_token':token, 'server_token':server_token, 'status':'authenticate', 'email':'true'}
+        result = collection.find(query)
+
+        if result:
+            token = hash.token
+            value = { "$set": { "client_token":token, "server_token":process_token, "status":status } }
+            collection.update_one(query, value))
+        else:
+            # get email...
+            email_query = {'user':email, 'server_token':server_token, 'status':'authenticate', 'email':'false'}
+            result = collection.find(email_query)
+
+            value = { "$set": { "server_token":process_token, "email":"true", "status":status } }
+            collection.update_one(email_query, value))
+    elif status == "accept":
+        query = {'client_token':token, 'server_token':server_token, 'status':'accept', 'email':'true'}
+        result = collection.find(query)
+
+        if result:
+            # check datetime...
+            value = { "$set": { "expiration":current} }
+            collection.update_one(query, value))
+        else:
+            newuser_query = {'client_token':token, 'server_token':server_token, 'status':'authorize', 'email':'true'}
+            result = collection.find(newuser_query)
+
+            if result:
+                value = { "$set": { "client_token":token, "server_token":process_token, "status":status } }
+                collection.update_one(query, value))
+            else:
+            
+    
+    return temp_token
 
 def post(self): #update user
         email = self.get_body_argument("email", default=None, strip=False)
@@ -77,70 +134,6 @@ token_server = token.newToken()
 
     return true
 
-def application(environ, start_response):
-    start_response('200 OK', [('Content-Type', 'text/html')])
-    parsed = parse_qs(environ['QUERY_STRING'])
-    status = parsed['status'][0]
-    #secure cookie with status (initiate) and id (random1)
-    #...client uses random1 to create/send password hash and random2
-    if status == "initiate":
-        temp_token = secrets.token_hex(16)
-        res.set_cookie('status', 'initiate', max_age=360, path='/', domain='treeop.com', secure=True)
-        res.set_cookie('token', temp_token, max_age=360, path='/', domain='treeop.com', secure=True)
-        collection.insert_one({'token':temp_token,'status':'initiate'})
-    elif status == "authenticate":
-        #server validates/stores password hash with status (authenticate) and id (random3) *uses random1 and random2
-        #...client validates and encrypts/sends email/sensitive information and random4
-        hash = parsed['hash'][0]
-        client_token = parsed['token'][0]
-        query = {'email':email}
-        result = collection.find(query)
-        old_token =
-
-        temp_token = secrets.token_hex(16)
-        res.set_cookie('status', 'authenticate', max_age=360, path='/', domain='treeop.com', secure=True)
-        res.set_cookie('token', temp_token, max_age=360, path='/', domain='treeop.com', secure=True)
-    elif status == "authorize":
-        #server validates/stores information with status (success) and server token (with expiration)
-        #...client validates and stores/sends client token
-        temp_token = secrets.token_hex(16)
-        res.set_cookie('status', 'authorize', max_age=360, path='/', domain='treeop.com', secure=True)
-        res.set_cookie('token', temp_token, max_age=360, path='/', domain='treeop.com', secure=True)
-    elif status == "accept":
-        temp_token = secrets.token_hex(16)
-        res.set_cookie('status', 'accept', max_age=360, path='/', domain='treeop.com', secure=True)
-        res.set_cookie('token', temp_token, max_age=360, path='/', domain='treeop.com', secure=True)
-
-def decrypt(ciphertext, password):
-    salt = ciphertext[0:SALT_SIZE]
-    ciphertext_sans_salt = ciphertext[SALT_SIZE:]
-    key = generate_key(password, salt, NUMBER_OF_ITERATIONS)
-    cipher = AES.new(key, AES.MODE_ECB)
-    padded_plaintext = cipher.decrypt(ciphertext_sans_salt)
-    plaintext = unpad_text(padded_plaintext)
-
-    return plaintext
-
-def cookies:
-    handler = {}
-    if 'HTTP_COOKIE' in os.environ:
-        cookies = os.environ['HTTP_COOKIE']
-        cookies = cookies.split('; ')
-
-        for cookie in cookies:
-            cookie = cookie.split('=')
-            handler[cookie[0]] = cookie[1]
-
-    for k in handler:
-        print k + " = " + handler[k] + "<br>
-        print ("select")
-        result="["
-        for doc in collection.find():
-            result+=dumps(doc)
-            result+=","
-        result+="]"
-        return [result]
-
 SALT_SIZE = 16
 NUMBER_OF_ITERATIONS = 20
 AES_MULTIPLE = 16
@@ -178,3 +171,13 @@ def encrypt(plaintext, password):
     ciphertext_with_salt = salt + ciphertext
 
     return ciphertext_with_salt
+
+def decrypt(ciphertext, password):
+    salt = ciphertext[0:SALT_SIZE]
+    ciphertext_sans_salt = ciphertext[SALT_SIZE:]
+    key = generate_key(password, salt, NUMBER_OF_ITERATIONS)
+    cipher = AES.new(key, AES.MODE_ECB)
+    padded_plaintext = cipher.decrypt(ciphertext_sans_salt)
+    plaintext = unpad_text(padded_plaintext)
+
+    return plaintext

@@ -92,7 +92,7 @@ To run Arch Linux, download the [Arch Linux ISO](https://www.archlinux.org/downl
    echo "%wheel   ALL=(ALL)   ALL" >> /etc/sudoers
 
    ln -sf /usr/share/zoneinfo/Region/City /etc/localtime
-   timedatectl set-timezone $TIMEZONE
+   timedatectl set-timezone America/Los_Angeles
    ntpd -qg
    hwclock --systohc
 
