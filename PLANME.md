@@ -617,3 +617,57 @@ codesign \
 
 ios-deploy -c
 ios-deploy -i 00008020-xxxxxxxxxxxx -b ExampleApp.app
+
+
+
+git config --local credential.helper ""
+
+git filter-branch --tree-filter 'rm -rf path/to/your/file' HEAD
+
+
+#!/bin/bash
+
+HOSTNAME='bolt' # variable names
+
+echo "Enter USB drive location"
+stty -echo
+read DRIVE
+stty echo
+
+setup() {
+}
+
+set -ex
+
+if [ "$1" == "chroot" ]
+then
+    configure
+else
+    setup
+fi
+
+echo -en "$ROOT_PASSWORD\n$ROOT_PASSWORD" | passwd
+useradd -m -g users -G wheel $USER
+echo -en "$USER_PASSWORD\n$USER_PASSWORD" | passwd $USER
+
+echo "$USER ALL=(ALL:ALL) ALL" >> /etc/sudoers
+echo "%wheel   ALL=(ALL)   ALL" >> /etc/sudoers
+
+
+ESC + Shift G will get you to the beginning of the last line
+
+
+Installation on UEFI
+Note: In the commands related to UEFI, esp denotes the mountpoint of the EFI system partition aka ESP.
+Install the syslinux and efibootmgr packages from the official repositories. Then setup Syslinux in the ESP as follows:
+Copy Syslinux files to ESP:
+# mkdir -p esp/EFI/syslinux
+# cp -r /usr/lib/syslinux/efi64/* esp/EFI/syslinux
+Setup boot entry for Syslinux using efibootmgr:
+# efibootmgr --create --disk /dev/sdX --part Y --loader /EFI/syslinux/syslinux.efi --label "Syslinux" --verbose
+where /dev/sdXY is the partition containing the bootloader.
+
+Create or edit esp/EFI/syslinux/syslinux.cfg by following #Configuration.
+Note:
+The config file for UEFI is esp/EFI/syslinux/syslinux.cfg, not /boot/syslinux/syslinux.cfg. Files in /boot/syslinux/ are BIOS specific and not related to UEFI Syslinux.
+When booted in BIOS mode, efibootmgr will not be able to set EFI nvram entry for /EFI/syslinux/syslinux.efi. To work around, place resources at the default EFI location: esp/EFI/syslinux/* -> esp/EFI/BOOT/* and esp/EFI/syslinux/syslinux.efi -> esp/EFI/BOOT/bootx64.efi

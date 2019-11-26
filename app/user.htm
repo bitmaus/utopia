@@ -1,14 +1,61 @@
 
-<style>
-.icon {
-	height: 16px;
-	width: 16px;
-}
 
-img {
-	padding-left: 8px;
-	padding-right: 8px;
-}
+<div id="header-sign">
+    <div id="sign-button" class="link-button" onclick="openNav('sign');">Sign Up</div>
+    <div id="log-button" class="solid-button" onclick="openNav('log');">Login</div></div>
+
+<div id="sign" class="hidden" >
+<div id="sign-dialog" >
+      <div id="header-search"><label for="email">Email</label><input name="email" type="text" maxlength="24" required placeholder="example@treeop.com"/></div>
+      <div id="header-search"><label for="password">Password</label><input name="password" type="password" maxlength="24" required placeholder="Enter password"/></div>
+      <div id="header-search"><label for="confirm">Confirm Password</label><input name="confirm" type="password" maxlength="24" required placeholder="Re-enter password..."/></div>
+      <div class="solid-button green" onclick="setStatus('Starting application...');">Submit</div></div></div>
+
+<div id="panel" class="sidenav">
+  <div id="panel-content"></div>
+
+<div id="log" class="hidden">
+  Cart coming soon...
+  <div id="log-dialog" >
+      <div id="header-search"><input type="text" required placeholder="Email..." /></div>
+      <div id="header-search"><input type="password" required placeholder="Password..."/></div>
+      Remember me <input type="checkbox" /><a>Forgot password?</a>
+      <div class="solid-button green" onclick="login();">Submit</div></div></div>
+</div>
+<style>
+.sidenav { width: 0; position: fixed; z-index: 1; top: 70px; right: 0; background-color: rgb(62, 92, 72); overflow-x: hidden; padding-top: 30px; transition: 0.5s; vertical-align: middle; }
+.sidenav a { padding: 8px 8px 8px 32px; text-decoration: none; font-size: 25px; color: #818181; display: block; transition: 0.3s; }
+.sidenav a:hover { color: #f1f1f1; }
+.sidenav .closebtn { position: absolute; top: 0; right: 25px; font-size: 36px; margin-left: 50px; }
+
+#header-sign div {  display: inline-block; }
+
+
+#sign { opacity: 0; transition: 1s ease opacity; position: absolute; height: 200px; width: 120px; }
+#sign-dialog { padding: 16px; }
+
+#log { opacity: 0; transition: 1s ease; }
+
+.hidden { visibility: hidden; height: 0; width: 0;}
+
+
+
+.disabled { pointer-events: none; opacity: 0.5; }
+
+label {position: absolute;font-weight: 600;color: #777777;user-select: none;transition: 0.15s ease-in-out;}
+
+input[data-empty="false"] + label,
+input:valid + label,
+input:focus + label {margin-bottom: 36px;font-size: 10px;color: #0d5224;background-color: white;}
+::-webkit-input-placeholder {opacity: 0;transition: inherit;}
+/**
+* Show the placeholder when the input is focused.
+*/
+input:focus::-webkit-input-placeholder {opacity: 1;}
+
+.icon {height: 16px;width: 16px;}
+
+img {padding-left: 8px;padding-right: 8px;}
 
 input {
  /*animated border outlines and color change
@@ -36,7 +83,6 @@ add hover highlighting, press effects, morph into spinner
 //server validates/stores information with status (success) and server token (with expiration)
 //...client validates and stores/sends client token
 
-
 //all have bool check for success/fail:
 
 //user_create (email, password_hash, token_first)
@@ -56,7 +102,6 @@ add hover highlighting, press effects, morph into spinner
 
 //[token_new] user_check (token_old)
 //...used for all transactions...
-
 
 //user sign in (logo, lock icon)
 //...email, password
@@ -78,11 +123,9 @@ add hover highlighting, press effects, morph into spinner
 //request existing client_salt and create client_hash
 //...send to server which computes server_hash with server_salt and compares
 
-  var mode = 'AES-GCM', length = 256, ivLength = 12, salt = 'a-unique-salt';  // request from server with email...
-  var encrypted, decrypted;
-function supportsCrypto () {
-alert(window.crypto && crypto.subtle && window.TextEncoder);
-}
+var mode = 'AES-GCM', length = 256, ivLength = 12, salt = 'a-unique-salt';  // request from server with email...
+var encrypted, decrypted;
+function supportsCrypto () {alert(window.crypto && crypto.subtle && window.TextEncoder);}
 //supportsCrypto();
 
 async function genEncryptionKey (password, mode, length, salt) {
@@ -101,79 +144,50 @@ async function genEncryptionKey (password, mode, length, salt) {
 }
 
 async function encrypt (text, password, mode, length, ivLength, salt) {
-	var algo = {
-		name: mode,
-		length: length,
-		iv: crypto.getRandomValues(new Uint8Array(ivLength))
-	};
+	var algo = {name: mode,length: length,iv: crypto.getRandomValues(new Uint8Array(ivLength))};
 
 	var key = await genEncryptionKey(password, mode, length, salt);
 	var encoded = new TextEncoder().encode(text);
 
-	return {
-		cipherText: await crypto.subtle.encrypt(algo, key, encoded),
-			iv: algo.iv
-	};
-}
+	return {cipherText: await crypto.subtle.encrypt(algo, key, encoded),iv: algo.iv};}
 
 async function decrypt (encrypted, password, mode, length, salt) {
-	var algo = {
-		name: mode,
-		length: length,
-		iv: encrypted.iv
-	};
+	var algo = {name: mode,length: length,iv: encrypted.iv};
 
 	var key = await genEncryptionKey(password, mode, length, salt);
 	var decrypted = await crypto.subtle.decrypt(algo, key, encrypted.cipherText);
 
-	return new TextDecoder().decode(decrypted);
-}
+	return new TextDecoder().decode(decrypted);}
 
 async function startCrypt() {
 	encrypted = await encrypt('email address', document.getElementById('p').value, mode, length, ivLength, salt);
-	console.log(encrypted); // { cipherText: ArrayBuffer, iv: Uint8Array }
-}
+	console.log(encrypted); // { cipherText: ArrayBuffer, iv: Uint8Array }}
 
 async function endCrypt() {
 	var decrypted = await decrypt(encrypted, document.getElementById('p').value, mode, length, salt);
-	console.log(decrypted); // Secret text
-}
+	console.log(decrypted); // Secret text}
 //...OAuth setup
 
 //token = encodeBase64Url(header) + '.' + encodeBase64Url(payload) + '.' + encodeBase64Url(signature) 
 //# token is now: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dnZWRJbkFzIjoiYWRtaW4iLCJpYXQiOjE0MjI3Nzk2Mzh9.gzSraSYS8EXBxLN_oWnFSRgCzcmJmMjLiuyu5CSpyHI 
 
-  $( ".input" ).focusin(function() {
-    $( this ).find( "span" ).animate({"opacity":"0"}, 200);
-  });
+  $( ".input" ).focusin(function() {$( this ).find( "span" ).animate({"opacity":"0"}, 200);});
 
-  $( ".input" ).focusout(function() {
-    $( this ).find( "span" ).animate({"opacity":"1"}, 300);
-  });
+  $( ".input" ).focusout(function() {$( this ).find( "span" ).animate({"opacity":"1"}, 300);});
 
 $(".login").submit(function(){
   $(this).find(".submit i").removeAttr('class').addClass("fa fa-check").css({"color":"#fff"});
   $(".submit").css({"background":"#2ecc71", "border-color":"#2ecc71"});
   $(".feedback").show().animate({"opacity":"1", "bottom":"-80px"}, 400);
   $("input").css({"border-color":"#2ecc71"});
-  return false;
-});
+  return false;});
 
 var locked = true;
 function lock() {
-	if (locked) 
-	{
-		document.getElementById("sign").src="lock-open.svg";
-		locked = false;
-	} else {
-		document.getElementById("sign").src="lock.svg";	
-		locked = true;
-	}
-}
+	if (locked) {document.getElementById("sign").src="lock-open.svg";locked = false;
+	} else {document.getElementById("sign").src="lock.svg";	locked = true;}}
 
-function showSign() {
-	document.getElementById("signage").style.display = "block";
-}
+function showSign() {document.getElementById("signage").style.display = "block";}
 
 //document.cookie = 'foo=bar; Secure;'; // only use https
 //document.cookie = 'foo=bar; Secure; HttpOnly'; //only for server use
@@ -192,25 +206,15 @@ function showSign() {
 //if(todo.value !== todo2.value) {
 
 // for email validation...
-function validateEmail(email) {
-  var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(email);
-}
 
 function validate() {
   var $result = $("#result");
   var email = $("#email").val();
   $result.text("");
 
-  if (validateEmail(email)) {
-    $result.text(email + " is valid :)");
-    $result.css("color", "green");
-  } else {
-    $result.text(email + " is not valid :(");
-    $result.css("color", "red");
-  }
-  return false;
-}
+  if (validateEmail(email)) {$result.text(email + " is valid :)");$result.css("color", "green");
+  } else {$result.text(email + " is not valid :(");$result.css("color", "red");}
+  return false;}
 
 </script>
 

@@ -1,98 +1,76 @@
 
+<style>
+.green {background-color: #4CAF50;color: darkgreen;}
+.green:hover {color: #4CAF50;border: 1px solid #4CAF50;}
+.blue {background-color: #3498DB;color: darkblue;}
+.blue:hover {color: #3498DB;border: 1px solid #3498DB;}
+.red {background-color: red;color: darkred;}
+.red:hover {color: red;border: 1px solid red;}
+.yellow {background-color: yellow;color: darkyellow;}
+.yellow:hover {color: yellow;border: 1px solid yellow;}
+
+.icon { width: 20px; height: 20px; }
+</style>
+
+<!-- panel/status -->
+<div id="status"><span id="message">An email has been sent</span><div class="lds-ring"><div></div><div></div><div></div><div></div></div></div>
+
 <script>
-var types = ["link"];</script>
+function setStatus(message){
+    $('#message').html(message); $('#status').css('opacity', '1'); $('#status').css('z-index', 0); $('#panel-content').addClass('disabled'); }
+
+function openNav(item) { 
+    $('#'+item).removeClass('hidden');
+    $('#'+item).css('left', event.pageX);
+    $('#'+item).css('top', event.pageY + 48);
+    $('#'+item).css('opacity', 1);
+
+    $('#header-sign').addClass('disabled'); }
+function closeNav() { $('#sign').css('opacity', 0); $('#log').css('opacity', 0);
+$('#header-sign').removeClass('disabled'); $('#panel').css('width', '0'); $('#sign').addClass('hidden'); $('#log').addClass('hidden');}
+
+$(document).click(function(e) { closeNav(); });
+$('#log').click(function(e) { e.stopPropagation(); });
+$('#sign').click(function(e) { e.stopPropagation(); });
+$('#header-sign').click(function(e) { e.stopPropagation(); });</script>
+
+<style>
+#status { opacity: 0; transition: 1s ease; text-align:center; padding:24px; }
+#message { color:rgb(20, 49, 29); }
+.lds-ring { display: inline-block; position: relative; width: 16px; height: 16px; }
+.lds-ring div { box-sizing: border-box; display: block; position: absolute; width: 12px; height: 12px; margin: 8px; border: 8px solid rgb(8, 129, 45); border-radius: 50%; animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite; border-color: rgb(7, 168, 34) transparent transparent transparent; }
+.lds-ring div:nth-child(1) { animation-delay: -0.45s; }
+.lds-ring div:nth-child(2) { animation-delay: -0.3s; }
+.lds-ring div:nth-child(3) { animation-delay: -0.15s; }
+@keyframes lds-ring { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } </style>
 
 <!-- link -->
-<style>
-	#link_edit { position: relative; }
-</style>
-<div id="link" class="hide"><img src="" /><a href="http://www.google.com">Google</a></div>
-<div id="link_edit" class="hide">Name <input type="text" /><br/>Link <input type="text" /></div></div>
-
+<a id="link">Link</a>	
+	
 <script>
-var anchors = document.getElementsByTagName("a");
-var element;
-for (var i = 0; i < anchors.length; i++) {
-	element = document.createElement("img");
-	element.setAttribute("src", "https://plus.google.com/_/favicon?domain_url=" + anchors[i].href);
-    anchors[i].prepend(element);
-	element = document.createElement("br");
-	anchors[i].appendChild(element);
+function makeLink(id, name, href) {
+    var link = document.getElementById(id); link.innerText = name; link.href = href;
+    var element = document.createElement("img"); element.setAttribute("src", "https://plus.google.com/_/favicon?domain_url=" + href); link.prepend(element);
 }</script>
 
-<script>
-	// content = [name, link]
-	function link(id, content) {
-		document.getElementById(id).children[1].innerText = content[0];
-		document.getElementById(id).children[1].href = content[1]; 
-		document.getElementById(id).children[0].src = "https://www.google.com/s2/favicons?domain=" + content[1]; }
-	
-	function link_edit(content) {
-		document.getElementById("link_edit").children[0].value = content[0];
-		document.getElementById("link_edit").children[2].value = content[1];
-	}
-	function link_save() { return [document.getElementById("link_edit").children[0].value, document.getElementById("link_edit").children[2].value]; }</script>
-
-<!-- input, list, option, tag, color, contact, tooltip?, datetime, user, media, payment, location, code,
-editor/signage?, quote, recipe-->
+<style>
+#link { visibility: hidden; }
+.link { display: inline-block; }
+.link img { padding-left: 16px; padding-right: 16px; padding-bottom: 8px; vertical-align: middle;}
+.link a {font-style: normal;text-decoration: none;}
+.link a:hover {color: darkblue;text-decoration: underline;}
+img {padding-left: 16px;padding-right: 16px;padding-bottom: 8px;vertical-align: middle;}
+a {font-style: normal;text-decoration: none;}
+a:hover {color: green;}</style>
 
 <!-- button -->
+<button id="button">Button</button>
+
 <style>
-    #button { visibility: hidden; }
-    
-button {
-  color: lightgray;
-  padding: 6px 6px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  -webkit-transition-duration: 0.4s; /* Safari */
-  transition-duration: 0.4s;
-  cursor: pointer;
-  border-radius: 8px;
-  border: 1px solid lightgray;
-  margin-left: 12px;
-}
-
-button:hover, button:focus {
-  background-color: lightgray;
-}
-
-.green {
-  background-color: #4CAF50;
-  color: darkgreen;
-}
-.green:hover {
-  color: #4CAF50;
-  border: 1px solid #4CAF50;
-}
-.blue {
-  background-color: #3498DB;
-  color: darkblue;
-}
-.blue:hover {
-  color: #3498DB;
-  border: 1px solid #3498DB;
-}
-.red {
-  background-color: red;
-  color: darkred;
-}
-.red:hover {
-  color: red;
-  border: 1px solid red;
-}
-.yellow {
-  background-color: yellow;
-  color: darkyellow;
-}
-.yellow:hover {
-  color: yellow;
-  border: 1px solid yellow;
-}
-</style>
+.link-button { color: #1c351b; width: 80px; font-weight: bold; padding: 8px; border-radius: 4px; text-align: center;}
+.link-button:hover { cursor: pointer; color: white; }
+.solid-button { background-color:  #3e7c3b; color: #1c351b; width: 80px; box-shadow: 1px 1px  #346631; font-weight: bold; padding: 8px; display: inline-block; text-align: center; border-radius: 4px; text-align: center; }
+.solid-button:hover { cursor: pointer; background-color: #346631; box-shadow: 1px 1px  #31612e; color: white; }</style>
 
 <script>
 function makeButton(id, text, color, process) {
@@ -102,96 +80,48 @@ function makeButton(id, text, color, process) {
     button.id = id;
     button.innerText = text;
     button.className += ' ' + color;
-    button.onclick = process;
-}
-</script>
+    button.onclick = process;}</script>
 
-<button id="button">Button</button>
+<!-- input/option -->
+<div id="header-search" onclick="changer(this);"><input type="text" placeholder="Search..." required /></div>
 
-<!-- link -->
-<style>
-    #link { visibility: hidden; }
-    
-    .link { display: inline-block; }
-    
-.link img {
-	padding-left: 16px;
-	padding-right: 16px;
-	padding-bottom: 8px;
-
-	vertical-align: middle;
-}
-
-.link a {
-	font-style: normal;
-	text-decoration: none;
-}
-
-.link a:hover {
-	color: darkblue;
-    text-decoration: underline;
-}
-</style>
-
-<a id="link">Link</a>	
-	
 <script>
-function makeLink(id, name, href) {
-    document.getElementById(id).innerHTML = document.getElementById("link").outerHTML;
-    document.getElementById(id).className += " link";
-    
-    var link = document.getElementById(id).childNodes[0];
-    link.id = id;
-    link.innerText = name;
-    link.href = href;
-    
-    var element = document.createElement("img");
-	element.setAttribute("src", "https://plus.google.com/_/favicon?domain_url=" + href);
-    link.prepend(element);
-}
+$('input').focus(
+    function(){
+        if (!$(this).val()) {
+            $(this).parent('div').css('width','240px');
+            $(this).parent('div').css('border', 'solid 2px green');
+            $(this).parent('div').css('background-color','#ffffff');
+            $(this).parent('div').css('cursor','default'); }
+    }).blur(
+        function(){
+            if (!$(this).val()) {
+                $(this).parent('div').css('width','170px');
+                $(this).parent('div').css('border', 'none');
+                $(this).parent('div').css('background-color','#eeeeee');
+                $(this).parent('div').css('cursor','pointer'); }
+            else {
+                $(this).parent('div').css('border', 'solid 2px green'); }
+    }).on('input', 
+        function() {
+        if (!$(this).val()) { $(this).parent('div').css('background-color','#ffffff');}
+        else { $(this).parent('div').css('background-color','#eeeeee'); }});
+
+function changer(item) { $(item).children('input')[0].focus(); }
 </script>
 
 <style>
-img {
-	padding-left: 16px;
-	padding-right: 16px;
-	padding-bottom: 8px;
+#header-search { padding: 12px; background-color: #eeeeee; border-radius: 4px; transition: 0.2s ease; margin: 8px; width: 170px; cursor: pointer; }
+#header-search:active { width: 240px; }
+#header-search input { background-color: #eeeeee; width: 160px; border: none; border-radius: 4px; transition: 0.2s ease; color: #000000; font-size: 16px; }
+#header-search input:hover { cursor: pointer; }
+#header-search input:focus { width: 240px; outline: none; background-color: #ffffff; cursor:text; }
+#header-search input:valid { background-color: #eeeeee; }
 
-	vertical-align: middle;
-}
+::placeholder { color: #12301b; font-size: 16px; font-family: Roboto Condensed;}
 
-a {
-	font-style: normal;
-	text-decoration: none;
-}
-
-a:hover {
-	color: green;
-}
-</style>
-
-	<a href='https://github.com/'>GitHub</a>
-	<a href='https://www.google.com'>Google</a>
-	<a href='https://www.microsoft.com/en-us/'>Microsoft</a>	
-	<a href='http://www.ebay.com/'>Ebay</a>	
-	<a href='https://www.dynu.com/en-US/'>Dynu</a>	
-	
-
-	<script>
-
-var anchors = document.getElementsByTagName("a");
-var element;
-for (var i = 0; i < anchors.length; i++) {
-	element = document.createElement("img");
-	element.setAttribute("src", "https://plus.google.com/_/favicon?domain_url=" + anchors[i].href);
-    anchors[i].prepend(element);
-	element = document.createElement("br");
-	anchors[i].appendChild(element);
-}
-
-</script>
-
-
+#label { left: 48px; transition: 0.2 ease; }
+#header-search input:focus #label { left: 36px; top: 12px; }</style>
 
 <!-- tab -->
 <style>
@@ -225,33 +155,7 @@ for (var i = 0; i < anchors.length; i++) {
 
     document.getElementById(id).style.display = "block"; evt.currentTarget.className += " active"; }</script>
 
-<!--
---- Tab 1
-This is some content...
---- Tab 2
-more content<br/>
-some html stuff...
-----
-
--{3}[^]*-{4}
-...match tabs
-
--{3}(.*)
-...matches link (discard last)
-
-(?:-{3}.*\n)([^]*?)(?=-{3})
-...matches content (discard last)
-
-dynamic id with...
-
-<div class="tabs">
-  <div class="tab">
-    <button class="tab-links" onclick="openTab(event, '|id|')">|link|</button>...</div>
-  <div id="|id|" class="tab-content">|content|</div>...</div>
--->
-
-
-from code...
+<!-- code -->
 <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
 
 <script type="text/javascript">
@@ -312,90 +216,24 @@ from code...
     }</script>
 
 <style scoped>
-        pre {
-            background: #f4f4f4;
-            border: 1px solid #777777;
-            border-left: 4px solid #777777;
-            color: #666;
-            page-break-inside: avoid;
-            font: 15px monospace;
-            line-height: 1.6;
-            margin-bottom: 1.6em;
-            max-width: 100%;
-            overflow: auto;
-            padding: 1em 1.5em;
-            display: block;
-            word-wrap: break-word;
-        }
+pre {background: #f4f4f4;border: 1px solid #777777;border-left: 4px solid #777777;color: #666;page-break-inside: avoid;font: 15px monospace;line-height: 1.6;margin-bottom: 1.6em;max-width: 100%;overflow: auto;padding: 1em 1.5em;display: block;word-wrap: break-word;}
 
-        pre.prettyprint {
-            padding: 1em 1.5em!important;
-            border-left: 4px solid #777777!important;
-            border-top: 1px solid #777777!important;
-            border-bottom: 1px solid #777777!important;
-            border-right: 1px solid #777777!important;
-        }
+pre.prettyprint {padding: 1em 1.5em!important;border-left: 4px solid #777777!important;border-top: 1px solid #777777!important;border-bottom: 1px solid #777777!important;border-right: 1px solid #777777!important;}
 
-        div.holder {
-            position: relative;
-            width: 740px;
-        }
+div.holder {position: relative;width: 740px;}
         
-        div.block {
-            width: 780px;
-        }
+div.block {width: 780px;}
+div.outline {border: 1px solid #777777;border-left: 4px solid #777777!important; background: #e4e4e4;margin-left: 40px;margin-bottom: -17px;padding: 3 0 3 3;display: flex;align-items: center;}
 
-        div.outline {
-            border: 1px solid #777777;
-            border-left: 4px solid #777777!important;
-            background: #e4e4e4;
-            margin-left: 40px;
-            margin-bottom: -17px;
-            padding: 3 0 3 3;
-            display: flex;
-            align-items: center;
-        }
+div.lang {position:absolute;}
+div.copy {background: #e4e4e4;float:right;width: 48px;height: 28px;margin-left: 650px; margin-top: -4px;margin-bottom: -4px;border-left: 1px solid #777777;border-top: 1px solid #777777!important; border-bottom: 1px solid #777777!important;}
 
-        div.lang {
-            position:absolute;
-        }
+div.copy:hover {background: #aaaaaa;cursor: pointer; }
 
-        div.copy {
-            background: #e4e4e4;
-            float:right;
-            width: 48px;
-            height: 28px;
-            margin-left: 650px;
-            margin-top: -4px;
-            margin-bottom: -4px;
-            border-left: 1px solid #777777;
-            border-top: 1px solid #777777!important;
-            border-bottom: 1px solid #777777!important;
-        }
-
-        div.copy:hover {
-            background: #aaaaaa;
-            cursor: pointer;
-        }
-
-        a {
-            margin-left: 12px;
-            font: bold 16px monospace;
-            color: #666;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
+a {margin-left: 12px;font: bold 16px monospace;color: #666;text-decoration: none;}
+a:hover {text-decoration: underline; }
         
-        #copy {
-            width: 18px;
-            height: 18px;
-            margin-left:12px;
-            margin-top: 5px;
-            z-index: 20;
-        }</style>
+#copy {width: 18px;height: 18px;margin-left:12px; margin-top: 5px; z-index: 20;}</style>
 
 <div class="holder">
     <div class="outline"><div class="lang"><a class="linker">language</a></div><div class="copy"><img id="copy" title="Copy" onclick="copyCode();" src="./resource/copy.svg" /></div></div>
@@ -415,151 +253,46 @@ from code...
 }</code></pre>
 -->
 
-from list...
+<!-- list -->
 <style>
-body {
-  margin: 0;
-  min-width: 250px;
-}
 
-/* Include the padding and border in an element's total width and height */
-* {
-  box-sizing: border-box;
-}
+* {box-sizing: border-box;}
 
-/* Remove margins and padding from the list */
-ul {
-  margin: 0;
-  padding: 0;
-}
-
-/* Style the list items */
-ul li {
-  cursor: pointer;
-  position: relative;
-  padding: 12px 8px 12px 40px;
-  list-style-type: none;
-  background: #eee;
-  font-size: 18px;
-  transition: 0.2s;
+ul {margin: 0;padding: 0;}
+ul li {cursor: pointer;position: relative;padding: 12px 8px 12px 40px;list-style-type: none;background: #eee;font-size: 18px;transition: 0.2s;
   
   /* make the list items unselectable */
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
+  -webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;}
 
-/* Set all odd list items to a different color (zebra-stripes) */
-ul li:nth-child(odd) {
-  background: #f9f9f9;
-}
+ul li:nth-child(odd) {background: #f9f9f9; }
 
-/* Darker background-color on hover */
-ul li:hover {
-  background: #ddd;
-}
+ul li:hover { background: #ddd; }
 
-/* When clicked on, add a background color and strike out text */
-ul li.checked {
-  background: #888;
-  color: #fff;
-  text-decoration: line-through;
-}
+ul li.checked { background: #888; color: #fff; text-decoration: line-through; }
 
-/* Add a "checked" mark when clicked on */
-ul li.checked::before {
-  content: '';
-  position: absolute;
-  border-color: #fff;
-  border-style: solid;
-  border-width: 0 2px 2px 0;
-  top: 10px;
-  left: 16px;
-  transform: rotate(45deg);
-  height: 15px;
-  width: 7px;
-}
+ul li.checked::before {content: '';position: absolute;border-color: #fff;border-style: solid;border-width: 0 2px 2px 0;top: 10px;left: 16px;transform: rotate(45deg);height: 15px;width: 7px;}
 
-/* Style the close button */
-.close {
-  position: absolute;
-  right: 0;
-  top: 0;
-  padding: 12px 16px 12px 16px;
-}
+.close {position: absolute;right: 0;top: 0;padding: 12px 16px 12px 16px;}
+.close:hover {background-color: #f44336;color: white;}
 
-.close:hover {
-  background-color: #f44336;
-  color: white;
-}
+.header {background-color: #f44336;padding: 30px 40px;color: white;text-align: center;}
+.header:after {content: "";display: table;clear: both;}
 
-/* Style the header */
-.header {
-  background-color: #f44336;
-  padding: 30px 40px;
-  color: white;
-  text-align: center;
-}
+input { margin: 0;border: none;border-radius: 0;width: 75%;padding: 10px;float: left;font-size: 16px;}
 
-/* Clear floats after the header */
-.header:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-/* Style the input */
-input {
-  margin: 0;
-  border: none;
-  border-radius: 0;
-  width: 75%;
-  padding: 10px;
-  float: left;
-  font-size: 16px;
-}
-
-/* Style the "Add" button */
-.addBtn {
-  padding: 10px;
-  width: 25%;
-  background: #d9d9d9;
-  color: #555;
-  float: left;
-  text-align: center;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.3s;
-  border-radius: 0;
-}
-
-.addBtn:hover {
-  background-color: #bbb;
-}
-
-/* Style the list items */
 </style>
 
 
 <script>
-function setClick(process) {
-	//alert(process);
-	document.getElementById('button1').onclick = process;
-}
+function setClick(process) {document.getElementById('button1').onclick = process;}
 
 function setColor(color) {
-	//alert(color);
 	document.getElementById('button1').className = color;
 	//$('#button1').className = color;
 	document.getElementById('button1').className += ' button';
 }
 
-function setText(text) {
-	//alert(text);
-	document.getElementById('button1').innerText = text;
-}
-
+function setText(text) {document.getElementById('button1').innerText = text;}
 </script>
 
 <div id="myDIV" class="header">
@@ -635,7 +368,7 @@ function newElement() {
 }
 </script>
 
-from media...
+<!-- media -->
 
 <video width="320" height="240" controls>
   <source src="movie.mp4" type="video/mp4">
@@ -644,10 +377,8 @@ Your browser does not support the video tag.
 </video>
 
 <!-- setup YouTube channel programming channel
-
 video tips... no drinking, cover arms, situp straight, no pauses
 -->
-
 
 navigation use...
 arrow-down.svg, arrow-left.svg, arrow-right.svg, arrow-up.svg, caret-square-down.svg, caret-square-left.svg, caret-square-up.svg
@@ -661,748 +392,23 @@ sort.svg, sort-up.svg, sort-down.svg, sort-alpha-down.svg, sort-alpha-up.svg, so
 settings...
 ellipsis-h.svg, ellipsis-v.svg
 
-from notification...
-<style>
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; 
-  height: 100%; 
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); 
-  background-color: rgba(0,0,0,0.4);
-}
-
-.modal-header {
-  padding: 2px 16px;
-  background-color: lightgray;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-}
-
-.modal-body {padding: 2px 16px;
-  background-color: rgb(132, 185, 135);
-}
-
-.modal-footer {
-  padding: 2px 16px;
-  background-color: darkgray;
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
-}
-
-.modal-content {
-  position: relative;
-  background-color: #fefefe;
-  margin: auto;
-  padding: 0;
-  border: 1px solid #888;
-  width: 50%;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
-  animation-name: animatetop;
-  animation-duration: 0.4s;
-  border-radius: 4px;
-
-    margin-top: 20px;
-}
-
-@keyframes animatetop {
-  from {top: -300px; opacity: 0}
-  to {top: 0; opacity: 1}
-} 
-
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-} 
-
-.twitter {
-    position: relative;
-    height: 20px;
-    box-sizing: border-box;
-    padding: 1px 8px 1px 6px;
-    border-radius: 3px;
-    font-weight: 500;
-    cursor: pointer;
-    font: normal normal normal 11px/18px 'Helvetica Neue',Arial,sans-serif;
-
-    width: 118px;
-    text-align: center;
-}
-
-.twitter:hover { background-color: lightblue; }
-</style>
-<button id="myBtn" class="twitter">Local contact</button>
-<div id="myModal" class="modal">
-<div class="modal-content">
-  <div class="modal-header">
-    <span class="close">&times;</span>
-    <h2>How to contact...</h2>
-  </div>
-  <div id="contact" class="modal-body">
-    <!--<p>calendar input</p>
-    <p>timer with green/red</p>-->
-
-  </div>
-  <div class="modal-footer">
-    <h3>Have a nice day!</h3>
-  </div></div></div> 
-
-<div id="myModal2" class="modal2" style="display:none;">
-<div class="modal-content2">
-  <div class="modal-header2">
-    <span class="close2">&times;</span>
-    <h2>Task Details</h2>
-  </div>
-  <div class="modal-body2">
-    <p>Some text in the Modal Body</p>
-    <p>Some other text...</p>
-  </div>
-  <div class="modal-footer2">
-    <h3>Modal Footer</h3>
-  </div></div></div> 
-
-<div id="myModal3" class="modal3" style="display:none;">
-<div class="modal-content3">
-  <div class="modal-header3">
-    <span class="close3">&times;</span>
-    <h2>Item Details</h2>
-  </div>
-  <div class="modal-body3">
-    <p>Some text in the Modal Body</p>
-    <p>Some other text...</p>
-  </div>
-  <div class="modal-footer3">
-    <h3>Modal Footer</h3>
-  </div></div></div> 
-
-<script>
-var btn = document.getElementById("myBtn");
-var span = document.getElementsByClassName("close")[0];
-var modal = document.getElementById('myModal');
-
-
-btn.onclick = function() {
-  modal.style.display = "block";
-}
-
-span.onclick = function() {
-  modal.style.display = "none";
-}
-
-</script>
-
-from dialog... 
-
-<style scoped>
-	.dialog-box {
-	width:300px;
-	height:150px;
-	background-color:white;
-	border:1px solid #ccc;
-	-webkit-box-shadow:0 1px 5px rgba(0,0,0,.2);
-	-mz-box-shadow:0 1px 5px rgba(0,0,0,.2);
-	box-shadow:0 1px 5px rgba(0,0,0,.2);
-	position:absolute;
-	width:200px;
-	height:100px;
-	margin-top:-51px;
-	margin-left:-101px;
-	z-index:9999;
-	color:#666;
-	visibility:hidden;
-	opacity:0;
-	}
-	.dialog-box .dialog-title {
-	margin:0;
-	padding:0;
-	font:inherit;
-	color:inherit;
-	font-weight:bold;
-	height:2em;
-	line-height:2em;
-	overflow:hidden;
-	padding:0 .8em;
-	background-color:#eee;
-	cursor:move;
-	}
-	.dialog-box .dialog-content {
-	border-top:1px solid #ccc;
-	padding:1em;
-	position:absolute;
-	top:2em;
-	right:0;
-	bottom:3em;
-	left:0;
-	overflow:auto;
-	}
-	.dialog-box .dialog-content iframe {
-	display:block;
-	border:none;
-	background:none;
-	margin:0;
-	padding:0;
-	overflow:auto;
-	width:100%;
-	height:100%;
-	}
-	.dialog-box .dialog-content::-webkit-scrollbar {
-	width:8px;
-	height:8px;
-	background-color:#f5f5f5;
-	border-left:1px solid #ccc;
-	}
-	.dialog-box .dialog-content::-webkit-scrollbar-thumb {
-	background-color:#666;
-	border:none;
-	}
-	.dialog-box .dialog-content::-webkit-scrollbar-thumb:hover {background-color:#555}
-	.dialog-box .dialog-content::-webkit-scrollbar-thumb:active {background-color:#444}
-	.dialog-box .dialog-action {
-	position:absolute;
-	right:0;
-	bottom:0;
-	left:0;
-	height:2em;
-	padding:.5em;
-	background-color:#eee;
-	border-top:1px solid #ccc;
-	text-align:right;
-	}
-	.dialog-box .dialog-action .btn {
-	text-decoration:none;
-	border:none;
-	outline:none;
-	color:inherit;
-	font-weight:bold;
-	background-color:white;
-	border:1px solid #ccc;
-	-webkit-border-radius:.2em;
-	-moz-border-radius:.2em;
-	border-radius:.2em;
-	padding:.4em 1em;
-	margin-left:.2em;
-	line-height:2em;
-	cursor:pointer;
-	}
-	.dialog-box .dialog-close,
-	.dialog-box .dialog-minmax {
-	border:none;
-	outline:none;
-	background:none;
-	font:inherit;
-	font-family:Arial,Sans-Serif;
-	font-style:normal;
-	font-weight:bold;
-	font-size:150%;
-	line-height:1.4em;
-	color:#aaa;
-	text-decoration:none;
-	position:absolute;
-	top:0;
-	right:.3em;
-	text-align:center;
-	cursor:pointer;
-	}
-	.dialog-box .dialog-minmax {right:1.5em}
-	.dialog-box .dialog-close:focus,
-	.dialog-box .dialog-minmax:focus,
-	.dialog-box .dialog-action .btn:focus {
-	border-width:0;
-	outline:none;
-	}
-	.dialog-box .dialog-close:hover,
-	.dialog-box .dialog-minmax:hover {color:#777}
-	.dialog-box .dialog-close:focus,
-	.dialog-box .dialog-minmax:focus {color:#C90000}
-	.dialog-box .dialog-close:active,
-	.dialog-box .dialog-minmax:active {color:#444}
-	.dialog-box .dialog-action .btn:hover {border-color:#bbb}
-	.dialog-box .dialog-action .btn:focus {
-	border-color:#aaa;
-	border-width:1px;
-	}
-	.dialog-box .dialog-action .btn:active {
-	border-color:#aaa;
-	background-color:#f5f5f5;
-	}
-	.dialog-box + .dialog-box-overlay {
-	background-color:black;
-	opacity:.2;
-	filter:alpha(opacity=20);
-	position:fixed !important;
-	position:absolute;
-	top:0;
-	right:0;
-	bottom:0;
-	left:0;
-	z-index:9997;
-	display:none;
-	}
-	.dialog-box.fixed-dialog-box {
-	position:fixed !important;
-	position:absolute;
-	}
-	.dialog-box.minimize {
-	width:2em !important;
-	height:2em !important;
-	overflow:hidden !important;
-	margin-top:0 !important;
-	margin-left:0 !important;
-	top:-1px !important;
-	left:1em !important;
-	}
-	.dialog-box.minimize .dialog-title {
-	color:transparent;
-	text-shadow:none;
-	text-indent:-9999px;
-	}
-	.dialog-box.minimize .dialog-minmax {
-	right:0;
-	left:0;
-	}
-	.dialog-box.minimize .dialog-close,
-	.dialog-box.minimize .dialog-content,
-	.dialog-box.minimize .dialog-action {
-	display:none;
-	visibility:hidden;
-	}
-</style>
-
-<script>
-(function(a, b) {
-
-	//var uniqueId = new Date().getTime();
-
-
-	var maximize = false,
-		dialog = b.getElementById('dialog-box'), // The HTML of dialog box
-		dialog_title = dialog.children[0],
-		dialog_minmax = dialog.children[1],
-		dialog_close = dialog.children[2],
-		dialog_content = dialog.children[3],
-		dialog_action = dialog.children[4],
-		dialog_overlay = b.getElementById('dialog-box-overlay');
-
-	a.setDialog = function(set, config) {
-
-		var selected = null, // Object of the element to be moved
-			x_pos = 0,
-			y_pos = 0, // Stores x & y coordinates of the mouse pointer
-			x_elem = 0,
-			y_elem = 0, // Stores top, left values (edge) of the element
-			defaults = {
-				title: dialog_title.innerHTML,
-				content: dialog_content.innerHTML,
-				width: 300,
-				height: 150,
-				top: false,
-				left: false,
-				buttons: {
-					"Close": function() {
-						setDialog('close');
-					}
-				},
-				specialClass: "",
-				fixed: true,
-				overlay: false
-			}; // Default options...
-
-		for (var i in config) { defaults[i] = (typeof(config[i])) ? config[i] : defaults[i]; }
-
-		// Will be called when user starts dragging an element
-		function _drag_init(elem) {
-			selected = elem; // Store the object of the element which needs to be moved
-			x_elem = x_pos - selected.offsetLeft;
-			y_elem = y_pos - selected.offsetTop;
-		}
-
-		// Will be called when user dragging an element
-		function _move_elem(e) {
-			x_pos = b.all ? a.event.clientX : e.pageX;
-			y_pos = b.all ? a.event.clientY : e.pageY;
-			if (selected !== null) {
-				selected.style.left = !defaults.left ? ((x_pos - x_elem) + selected.offsetWidth/2) + 'px' : ((x_pos - x_elem) - defaults.left) + 'px';
-				selected.style.top = !defaults.top ? ((y_pos - y_elem) + selected.offsetHeight/2) + 'px' : ((y_pos - y_elem) - defaults.top) + 'px';
-			}
-		}
-
-		// Destroy the object when we are done
-		function _destroy() {
-			selected = null;
-		}
-
-		dialog.className =  "dialog-box " + (defaults.fixed ? 'fixed-dialog-box ' : '') + defaults.specialClass;
-		dialog.style.visibility = (set == "open") ? "visible" : "hidden";
-		dialog.style.opacity = (set == "open") ? 1 : 0;
-		dialog.style.width = defaults.width + 'px';
-		dialog.style.height = defaults.height + 'px';
-		dialog.style.top = (!defaults.top) ? "50%" : '0px';
-		dialog.style.left = (!defaults.left) ? "50%" : '0px';
-		dialog.style.marginTop = (!defaults.top) ? '-' + defaults.height/2 + 'px' : defaults.top + 'px';
-		dialog.style.marginLeft = (!defaults.left) ? '-' + defaults.width/2 + 'px' : defaults.left + 'px';
-		dialog_title.innerHTML = defaults.title;
-		//dialog_content.innerHTML = defaults.content;
-		dialog_action.innerHTML = "";
-		dialog_overlay.style.display = (set == "open" && defaults.overlay) ? "block" : "none";
-
-		if (defaults.buttons) {
-			for (var j in defaults.buttons) {
-				var btn = b.createElement('a');
-					btn.className = 'btn';
-					btn.href = 'javascript:;';
-					btn.innerHTML = j;
-					btn.onclick = defaults.buttons[j];
-				dialog_action.appendChild(btn);
-			}
-		} else {
-			dialog_action.innerHTML = '&nbsp;';
-		}
-
-		// Bind the draggable function here...
-		dialog_title.onmousedown = function() {
-			_drag_init(this.parentNode);
-			return false;
-		};
-
-		dialog_minmax.innerHTML = '&ndash;';
-		dialog_minmax.title = 'Minimize';
-		dialog_minmax.onclick = dialogMinMax;
-
-		dialog_close.onclick = function() {
-			setDialog("close", {content:""});
-		};
-
-		b.onmousemove = _move_elem;
-		b.onmouseup = _destroy;
-
-		maximize = (set == "open") ? true : false;
-
-	};
-
-	// Maximized or minimized dialog box
-	function dialogMinMax() {
-		if (maximize) {
-			dialog.className += ' minimize';
-			dialog_minmax.innerHTML = '+';
-			dialog_minmax.title = dialog_title.innerHTML.replace(/<.*?>/g,"");
-			maximize = false;
-		} else {
-			dialog.className = dialog.className.replace(/(^| )minimize($| )/g, "");
-			dialog_minmax.innerHTML = '&ndash;';
-			dialog_minmax.title = 'Minimize';
-			maximize = true;
-		}
-	}
-
-})(window, document);
-
-document.getElementById('ny-btn').onclick = function() {
-    setDialog("open", {
-        title: "Tag Editor",
-        width: 800,
-        height: 600,
-        content: "",
-        buttons: {
-            "Delete": function() {
-                setDialog("open", {
-                    title: "Confirmation",
-                    content: "Are you sure?",
-                    overlay: true,
-                    buttons: {
-                        "Yes": function() {
-                            setDialog("close");
-                        },
-                        "No": function() {
-                            alert("Canceled!");
-                            setDialog("close");
-                        }
-                    }
-                });
-            }
-        }
-    });
-};
-
-function twitterFeed() {
-    setDialog("open", {
-        title: "Twitter Feed",
-        width: 400,
-        height: 600,
-        content: "",
-        buttons: {
-            "Delete": function() {
-                setDialog("open", {
-                    title: "Confirmation",
-                    content: "Are you sure?",
-                    overlay: true,
-                    buttons: {
-                        "Yes": function() {
-                            setDialog("close");
-                        },
-                        "No": function() {
-                            alert("Canceled!");
-                            setDialog("close");
-                        }
-                    }
-                });
-            }
-        }
-    });
-};
-</script>
-<div class="dialog-box" id="dialog-box">
-	<h3 class="dialog-title">&nbsp;</h3>
-	<a href="javascript:;" class="dialog-minmax" title="Minimize">&ndash;</a>
-	<a href="javascript:;" class="dialog-close" title="Close">&times;</a>
-	
-	<div id="dialog-content" class="dialog-content"></div><div class="dialog-action"></div>
-</div>
-<div class="dialog-box-overlay" id="dialog-box-overlay"></div>
-<button id="ny-btn">Tag Editor</button>
-
-notifications example...
-var title="New Notification";
-var options ={
-body:"this is a new notification",
-icon:"pathtoicon/icon.jpg"
-}
-noti= new Notification(title, options);
-
-Notification.requestPermission();
-
-<script>
-    window.addEventListener("load",c);
-    function init(){
-    var b=document.getElementById("but");
-    b.addEventListener("click",noti,false);
-    }
-
-    function c(){
-    init();
-    if(window.Notification && Notification.permission!=="granted"){
-    Notification.requestPermission(function(status){
-    if(Notification.permission!==status){
-    Notification.permission=status;}})}}
-
-    function noti(){
-    if(Notification.permission=="granted"){//check if we have notification permission
-    var title="Just Testing This App";//title for notification
-    var options={//options for notification
-    body:"it is just a test"}
- noti= new Notification(title,options);//permission is granted, display notification}
- else{alert("permission not granted");//alert error message : permission is not granted}}
-    </script>
-    <button id=but>
-    Send Notification Now
-    </button>
-
-
-from panel...
-
-<style>
-
-#lefttransition-frame {
-    opacity: 1;
-    overflow-x: hidden;
-    overflow: hidden;
- -webkit-animation: color-me-in 1s; /* Safari 4+ */
-  -moz-animation:    color-me-in 1s; /* Fx 5+ */
-  -o-animation:      color-me-in 1s; /* Opera 12+ */
-  animation:         color-me-in 1s; /* IE 10+ */
-}
-
-.leftsidenav {
-    height: 100%;
-    width: 0;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    background-color: rgb(173, 173, 173);
-    overflow-x: hidden;
-    overflow: hidden;
-    transition: 0.5s;
-    padding-top: 60px;
-
-}
-
-@keyframes color-me-in {
-  0% {
-    opacity: 0;
-  }
-  /* Adding a step in the middle */
-  50% {
-    opacity: 0.5;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-.leftsidenav a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 25px;
-    color: #818181;
-    display: block;
-    transition: 0.3s;
-}
-
-.leftsidenav a:hover {
-    color: #f1f1f1;
-}
-
-.leftsidenav .leftclosebtn {
-    position: absolute;
-    top: 0;
-    left: 25px;
-    font-size: 36px;
-    margin-right: 50px;
-}
-
-@media screen and (max-height: 450px) {
-  .leftsidenav {padding-top: 15px;}
-  .leftsidenav a {font-size: 18px;}
-}
-</style>
-</head>
-<body>
-
-<div id="myleftSidenav" class="leftsidenav">
-  <a href="javascript:void(0)" class="leftclosebtn" onclick="closeleftNav()">&times;</a>
-  <div id="lefttransition-frame"><div id="leftslider-content"></div></div>
-</div>
-
-<script>
-function openTOC(pane) {
-	document.getElementById("myleftSidenav").style.width = "0";
-	if (pane == 1)
-    	{ 
-			
-			document.getElementById("myleftSidenav").style.width = "300px";
-            //document.getElementById("lefttransition-frame").style.opacity = "1";
-            setTimeout(function() {
-  $('#leftslider-content').load('model/site/control/media/content/toc.htm',function(){ panelOpen = true; });
-}, 300);
-            
-            
-		}
-	if (pane == 2)
-	{
-	//	$('#slider-content').load('build/datetime/calendar.htm',function(){});
-	//		document.getElementById("mySidenav").style.width = "500px";
-	}
-}
-
-function closeleftNav() {
-    document.getElementById("leftslider-content").innerHTML = "";
-    document.getElementById("myleftSidenav").style.width = "0";
-
-}
-</script>
-
-from slider... 
-<style>
-
-.sidenav {
-    height: 100%;
-    width: 0;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    right: 0;
-    background-color: rgb(173, 173, 173);
-    overflow-x: hidden;
-    transition: 0.5s;
-    padding-top: 60px;
-}
-
-.sidenav a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 25px;
-    color: #818181;
-    display: block;
-    transition: 0.3s;
-}
-
-.sidenav a:hover {
-    color: #f1f1f1;
-}
-
-.sidenav .closebtn {
-    position: absolute;
-    top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
-}
-
-@media screen and (max-height: 450px) {
-  .sidenav {padding-top: 15px;}
-  .sidenav a {font-size: 18px;}
-}
-</style>
-</head>
-<body>
-
-<div id="mySidenav" class="sidenav">
-  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-  <div id="slider-content"></div>
-</div>
-
-<script>
-function openNav(pane) {
-	document.getElementById("mySidenav").style.width = "0";
-	if (pane == 1)
-    	{ 
-			$('#slider-content').load('model/site/control/tag.htm',function(){});
-			document.getElementById("mySidenav").style.width = "400px";
-		}
-	if (pane == 2)
-	{
-		$('#slider-content').load('model/site/control/datetime/calendar.htm',function(){});
-			document.getElementById("mySidenav").style.width = "500px";
-	}
-}
-
-function closeNav() {
-    document.getElementById("mySidenav").style.width = "0";
-}
-</script>
+from notification...dialog... toast...?
 
 ...hamburger...
 <div class="nav-icon"><div></div></div>
 
 .nav-icon { margin: 1em; width: 40px; }
-
 .nav-icon:after, 
 .nav-icon:before, 
 .nav-icon div { background-color: #fff; border-radius: 3px; content: ''; display: block; height: 5px; margin: 7px 0; transition: all .2s ease-in-out; }
-
 .nav-icon:hover:before { transform: translateY(12px) rotate(135deg); }
 .nav-icon:hover:after { transform: translateY(-12px) rotate(-135deg); }
 .nav-icon:hover div { transform: scale(0); }
 
-
 ...speech recognition...
   <script>
     window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
-    let finalTranscript = '';
-    let recognition = new window.SpeechRecognition();
+    let finalTranscript = ''; let recognition = new window.SpeechRecognition();
     recognition.interimResults = true;
     recognition.maxAlternatives = 10;
     recognition.continuous = true;
@@ -1410,13 +416,9 @@ function closeNav() {
       let interimTranscript = '';
       for (let i = event.resultIndex, len = event.results.length; i < len; i++) {
         let transcript = event.results[i][0].transcript;
-        if (event.results[i].isFinal) {
-          finalTranscript += transcript;
-        } else {
-          interimTranscript += transcript;
-        }
-      }
-      document.querySelector('body').innerHTML = finalTranscript + '<i style="color:#ddd;">' + interimTranscript + '</>';
-    }
-    recognition.start();
-  </script>
+        if (event.results[i].isFinal) { finalTranscript += transcript;
+        } else { interimTranscript += transcript; } }
+      document.querySelector('body').innerHTML = finalTranscript + '<i style="color:#ddd;">' + interimTranscript + '</>';}
+    recognition.start();</script>
+
+<!-- contact, tooltip?, quote, recipe-->

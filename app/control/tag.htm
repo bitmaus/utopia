@@ -1,0 +1,258 @@
+include tags view...
+
+
+<!--<img class="icon" src="icon/palette.svg" onclick="changeColor(this);" />-->
+
+<script>
+    var oldColor;
+    var newColor;
+
+    function changeColor(caller) { return PICKER.show(caller); }
+
+PICKER = {
+    mouse_inside: false,
+    to_hex: function(dec) { hex = dec.toString(16); return hex.length == 2 ? hex : '0' + hex; },
+    show: function(caller) {
+        var input = $(caller), position = input.offset();
+
+        PICKER.$colors = $('<canvas width="230" height="150" ></canvas>');
+        PICKER.$colors.css({ 'position': 'absolute', 'top': position.top + input.height() + 28, 'left': position.left - 148, 'cursor': 'crosshair', 'display': 'none', 'z-index': 10 });
+            
+		$('body').append(PICKER.$colors.fadeIn());
+            
+		PICKER.colorctx = PICKER.$colors[0].getContext('2d');
+        PICKER.render();
+
+        PICKER.$colors.click(function(e) { 
+            PICKER.close(); newColor = PICKER.get_color(e); $(caller).parent().css("backgroundColor", newColor); })
+            .hover(function() { PICKER.mouse_inside=true; }, function() { PICKER.mouse_inside=false; });
+        
+        $('body').mouseup(function() { if (!PICKER.mouse_is_inside) PICKER.close(); });  },
+
+    close: function() { PICKER.$colors.fadeOut(PICKER.$colors.remove); },
+
+    get_color: function(e) {
+        var pos_x = e.pageX - PICKER.$colors.offset().left, pos_y = e.pageY - PICKER.$colors.offset().top;
+        var data = PICKER.colorctx.getImageData(pos_x, pos_y, 1, 1).data;
+        return '#' + PICKER.to_hex(data[0]) + PICKER.to_hex(data[1]) + PICKER.to_hex(data[2]); },
+
+    render: function () {
+        var gradient = PICKER.colorctx.createLinearGradient(0, 0, PICKER.$colors.width(), 0);
+
+        gradient.addColorStop(0,    "rgb(255,   0,   0)");
+        gradient.addColorStop(0.15, "rgb(255,   0, 255)");
+        gradient.addColorStop(0.33, "rgb(0,     0, 255)");
+        gradient.addColorStop(0.49, "rgb(0,   255, 255)");
+        gradient.addColorStop(0.67, "rgb(0,   255,   0)");
+        gradient.addColorStop(0.84, "rgb(255, 255,   0)");
+        gradient.addColorStop(1,    "rgb(255,   0,   0)");
+
+        PICKER.colorctx.fillStyle = gradient;
+        PICKER.colorctx.fillRect(0, 0, PICKER.colorctx.canvas.width, PICKER.colorctx.canvas.height);
+
+        gradient = PICKER.colorctx.createLinearGradient(0, 0, 0, PICKER.$colors.height());
+        gradient.addColorStop(0,   "rgba(255, 255, 255, 1)");
+        gradient.addColorStop(0.5, "rgba(255, 255, 255, 0)");
+        gradient.addColorStop(0.5, "rgba(0,     0,   0, 0)");
+        gradient.addColorStop(1,   "rgba(0,     0,   0, 1)");
+
+        PICKER.colorctx.fillStyle = gradient;
+        PICKER.colorctx.fillRect(0, 0, PICKER.colorctx.canvas.width, PICKER.colorctx.canvas.height);  }  };  </script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+<style scoped>
+    @-webkit-keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }  
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @-webkit-keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }  
+    @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+    ::placeholder { color: rgb(56, 56, 56); opacity: .75; }
+    :-ms-input-placeholder { /* Internet Explorer 10-11 */ color: rgb(56, 56, 56); }
+    ::-ms-input-placeholder { /* Microsoft Edge */ color: rgb(56, 56, 56); }
+
+    #tags { padding: 12 12 12 12; margin-left: 24px; box-shadow: rgb(231, 223, 223) 1px 1px; border-radius: 4px; background-color:rgb(239, 243, 247); font-family: Roboto; }
+
+    div.inline { vertical-align: middle; margin: auto auto; display: flex; justify-content: center; align-items: center;
+        -webkit-transition: height 0.2s ease; -moz-transition: height 0.2s ease; -o-transition: height 0.2s ease; -ms-transition: height 0.2s ease; transition: height 0.2s ease; }
+    
+    .icon { width: 14px; height: 14px; z-index: 20; border-radius: 8px; padding: 8px; margin-left: 2px; margin-right: 2px; }
+    .icon:hover { cursor: pointer; background-color:rgb(243, 237, 237); }
+    
+    div.new-tag { border-radius: 5px; border: 0.8px solid rgb(90, 90, 90); box-shadow: 0 0 11px rgba(33,33,33,.2);
+        width: 360px; padding: 10px; transition: 0.2s ease-out; background-color: white; box-sizing: border-box; }
+    
+    input{ display: inline-block; -webkit-animation: fadeIn 0.5s; animation: fadeIn 0.5s; padding: 6px 6px 4px 12px; margin-left: 8px; margin-right: 8px;
+        border: 1px solid #EDEDED; border-radius: 4px; transition: 0.2s ease-out; color: darken(#EDEDED, 30%); }
+    input:focus { outline: 0; border-color: black; }
+
+    div.icons { margin-right: 12px; display: inline-block; -webkit-animation: fadeIn 0.5s; animation: fadeIn 0.5s; }
+
+    #tags li { border-radius: 5px; border: 0.8px solid rgb(90, 90, 90); box-shadow: 0 0 11px rgba(33,33,33,.2);
+        margin: 4px; margin-left: -20px; list-style: none; padding: 4px;
+         opacity: 1; justify-content: space-between;}
+    
+    .tag-tab { width: 18px; margin-right: 10px; }
+    .tag-label { font-weight:600; width: 100px; height: 48px; padding-left: 14px; margin-left: 12px; margin-right: 12px; 
+        background-image: linear-gradient(to right, rgb(247, 247, 247) , rgba(236, 236, 236, 0.753)); border-radius: 3px 3px 3px 3px; }
+    .tag-hidden { display:none!important; }
+
+    .initial-height { height: 60px; }
+    .add-height { height: 200px; }
+
+    </style>
+
+<div id="tags">
+    <div class="inline"><img class="icon" src="icon/tags.svg" onclick="temptags.select();" title="Show tags"/></div>
+    <div class="new-tag inline" >
+        <img class="icon" title="Add new tag" onclick="temptags.insert(this, $('#name').val(), newColor);" src="icon/new.svg" />
+        <input id="name" type="text" placeholder="Enter tag name..." maxlength="24" />
+        <img class="icon" title="Add a color" onclick="changeColor(this, 'item-oid')" src="icon/palette.svg" />
+        <img class="icon" title="Write a note" src="icon/sticky-note.svg" /></div>
+
+    <div id="showresults"></div>
+
+    <ul id="item-template" style="display:none;">
+        <li id="item-oid" title="item-note" style="background-color:#item-color;" data-sortby='0'>
+            <div id="item-oid-tag" class="inline initial-height">
+            <div class="tag-tab"><img id="item-oid-order" class="icon" title="Change order" src="icon/bars.svg" draggable='true' ondragstart='drag(event);' /></div>
+            <div id="item-oid-label" class="tag-label inline">
+                <div id="item-oid-span">item-name</div>
+                <input id="item-oid-input" type="text" class="tag-hidden" value="item-name" /></div>
+            <div id="item-oid-editor" class="tag-hidden top-to-bottom">
+                <img id="item-oid-color" class="icon" title="Change color" onclick="elementColor = $(this).parent().parent(); changeColor(this);" src="icon/palette.svg" /><br/>
+                <img id="item-oid-color" class="icon" title="Change note" onclick="elementColor = $(this).parent().parent(); changeColor(this);" src="icon/sticky-note.svg" /><br/>
+                <img id="item-oid-delete" class="icon" title="Remove tag" onclick="temptags.delete(this, 'item-oid');" src="icon/trash.svg" /><br/>
+                <img id="item-oid-save" class="icon" title="Save changes" onclick="temptags.update('item-oid', $('#item-oid-input').val(), newColor);" src="icon/check.svg" />
+                <img id="item-oid-cancel" class="icon" title="Cancel" onclick="cancelUpdate('item-oid');" src="icon/cancel.svg" /></div>
+            <div id="item-oid-actions" class="inline" ><img id='item-oid-wrench' class="icon" onclick='refineList("item-oid");' src="icon/edit.svg" /></div></div></li></ul></div>
+            <div id="color"></div>
+
+<script type="text/javascript">
+var testing;
+function data(user, token) {
+  this.user = user;
+  this.token = token;
+
+  this.service = function (collection, action, query, value) {
+    $.ajax({
+        url: "http://192.168.1.111:8888/data",
+        data: { 
+        'user': this.user, 
+        'token': this.token,
+        'collection': collection,
+        'action': action,
+        'query': query,
+        'value': value }, 
+        type: "POST",
+        dataType : "json",
+        success: function(data) { if (action == "select") { temptags.content = data; temptags.render(); }
+            if (action == "insert") { temptags.select(); } },
+        error: function(xhr, status) { },
+        complete: function(xhr, status) {}});} }
+
+//entry = { "email": email, "password": password }
+function tags(user, token) {
+    this.data = new data(user, token);
+    this.content = "";
+
+    this.select = function(data) {
+        this.data.service("tags", "select", "{}", ""); }
+
+    this.insert = function(ref, name) {
+        var color = (newColor != undefined) ? newColor.replace('#', '') : $("#"+ref+"-colorx").html();
+        this.data.service("tags", "insert", "{'name':'" + name + "', 'color': '" + color + "'}", "");
+
+        $("#name").val("");
+        $("#new-tag").css({'background-color':''}); }
+
+    this.update = function(id) {
+        var ref = id.replace("-input", "");
+        var name = $("#"+ref+"-input").val();
+        var color = (newColor != undefined) ? newColor.replace('#', '') : $("#"+ref+"-colorx").html();
+
+        this.data.service("tags", "update", "{'$set':{'name':'" + name + "','color':'" + color + "'}}", id);
+        refineList(id);
+        setRender = true; }
+
+    this.delete = function(ref, id) {
+        this.data.service("tags", "delete", "", id);
+
+        const fade = { opacity: 0, transition: 'opacity 0.5s' };
+        $(ref).parent().parent().css(fade).delay(10).slideUp({duration: 500, queue: false}, function() { $(ref).parent().parent().remove(); }); }
+
+    this.sort = function() {
+        var temp = 1;
+        $('ul#linkedEventList li').each(function(index, element) {
+            var li = $(element);
+            li.data('sortby', temp);
+            temp++; });
+
+        var ul = $('#linkedEventList');
+        var li = ul.children('li');
+        
+        li.detach().sort(function(a,b) { return $(a).data('sortby') - $(b).data('sortby'); });
+        ul.append(li); }
+
+    this.render = function () {
+        html = "<ul id='linkedEventList' class='itemDelete'>";
+        this.content.forEach((item) => { html += $('#item-template').html().replace(/item-name/g, item.name).replace(/item-color/g, item.color).replace(/item-oid/g, item._id.$oid); });
+        html += "</ul>";
+
+        $('#showresults').hide().replaceWith($('#showresults').html(html).fadeIn('slow')); } }
+    
+    var temptags = new tags("matt", "password");
+
+    function refineList(oid) {
+        $("#" + oid + "-input").removeClass("tag-hidden"); 
+        $("#" + oid + "-span").addClass("tag-hidden");
+        $("#" + oid + "-editor").removeClass("tag-hidden"); $("#" + oid + "-tag").addClass("add-height");
+        $("#" + oid + "-actions").addClass("tag-hidden"); }
+
+    function cancelUpdate(oid) {
+        $("#" + oid + "-tag").removeClass("add-height");
+        $("#" + oid + "-input").addClass("tag-hidden"); 
+        $("#" + oid + "-span").removeClass("tag-hidden");
+        $("#" + oid + "-editor").addClass("tag-hidden"); 
+        $("#" + oid + "-actions").removeClass("tag-hidden");
+        $("#" + oid).css({'background-color': oldColor}).val(oldColor); }
+        
+        $(document).ready(function(){ $('#color').load("color.htm"); });
+        
+        
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    ev.target.appendChild(document.getElementById(data));
+}
+        </script>
+
+<!--add drag and drop (similar to basket sketch)
+    add greyscale to color picker
+    add stickers-->
+
+<!-- default data
+{	name: "Kate",
+	note: "Katsebo",
+	color: "000000" }
+{	name: "Noah",
+	note: "Noah's Ark" }
+{	name: "Adam",
+	note: "Adam's Adventure" }
+{	name: "Matt",
+	note: "Matthew Tin" }
+{	name: "Vantage" }
+{	name: "Household Order" }
+{	name: "Vancouver Island" }
+{	name: "University" }
+{	name: "Tree" }
+    
+place in user's personal database?-->
