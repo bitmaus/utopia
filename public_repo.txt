@@ -1,6 +1,0 @@
-$ cd project.git
-$ mv hooks/post-update.sample hooks/post-update
-$ chmod a+x hooks/post-update
-
-
-see https://git-scm.com/book/en/v1/Git-on-the-Server-Public-Access

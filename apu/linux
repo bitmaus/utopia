@@ -1,0 +1,36 @@
+#!/bin/bash
+
+HOSTNAME='bolt' # variable names
+
+echo "Enter USB drive location"
+stty -echo
+read DRIVE
+stty echo
+
+setup() {
+}
+
+set -ex
+
+if [ "$1" == "chroot" ]
+then
+    configure
+else
+    setup
+fi
+
+echo -en "$ROOT_PASSWORD\n$ROOT_PASSWORD" | passwd
+useradd -m -g users -G wheel $USER
+echo -en "$USER_PASSWORD\n$USER_PASSWORD" | passwd $USER
+
+echo "$USER ALL=(ALL:ALL) ALL" >> /etc/sudoers
+echo "%wheel   ALL=(ALL)   ALL" >> /etc/sudoers
+
+
+
+
+xargs mv -t /app/dest/ < /tmp/list.txt # move file by list in file
+
+Process uses x86-64 machines, try to cross-compile Arch Linux to run on any chip [here](https://archlinuxarm.org/wiki/Distcc_Cross-Compiling).
+https://www.linuxjournal.com/article/8957 and https://www.linuxjournal.com/content/diy-build-custom-minimal-linux-distribution-source
+

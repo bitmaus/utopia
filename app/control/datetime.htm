@@ -646,5 +646,153 @@ document.getElementById("demo").innerHTML = obj.name + ", " + obj.birth;
 ...S | M | T | W | T | F | S  (as bubble buttons) (repeat checkbox)
 ...time "flipper", negative time control-->
 
+<script>
 
+
+function search() { alert($('#term').val()); };</script>
+
+
+
+        
+
+<div id="stamp">&copy; 2019, Treeop</div>
+
+<script>
+var d, datetime = "YYYY.MM.DD HH:mm:SS";
+
+var RR = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+var dd = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+var PP = ["AM", "PM"];
+
+var num_day = [31, 28, 31, 
+
+function getDateTime(format) {
+	d = new Date();
+
+	output = format.replace("YYYY", d.getFullYear());
+	output = output.replace("MM", d.getMonth() + 1);
+	output = output.replace("DD", d.getDate());
+	output = output.replace("HH", d.getHours());
+	output = output.replace("mm", d.getMinutes());
+	output = output.replace("SS", d.getSeconds());
+	output = output.replace("hh", d.getHours() % 12);
+	output = output.replace("PP", PP[(d.getHours() > 11) ? 1 : 0]);
+	output = output.replace("RR", RR[d.getMonth()]);
+	output = output.replace("dd", dd[d.getDay()]);
+
+	return output; }
+
+setInterval(function() { $("#datetime").html(getDateTime(datetime)); }, 1000);
+
+function getTimeRemain(datetime) {
+	var g = new Date();
+	g = datetime.getTime() - g.getTime();  // get milliseconds
+	var hours = g;
+	hours = hours / (60 * 60 * 1000); 
+	
+	return hours;
+}
+
+function startTimer() {
+	var e = document.getElementById("pulledDate").value;
+	var f = new Date();
+
+	alert(getTimeRemain(f));
+	var num_days = f.getMonth() % 2
+	f.getDay()
+	$('#board').html(
+}
+	
+var start, end, started = false;
+var issues = [];
+function startTimer2() {
+var e = new Date();
+if (!started) {
+	start = e.getTime();
+	started = true;
+} else {
+	var f = new Date();
+	end = e.getTime();
+	started = false;
+}
+document.getElementById("timer").innerHTML = end - start;
+}
+
+function pullTime() { document.getElementById("pulledDate").value = getDateTime(); }
+
+
+function function1() {
+  var ul = document.getElementById("list");
+  var li = document.createElement("li");
+  li.appendChild(document.createTextNode("Four"));
+  li.setAttribute("id", "element4"); // added line
+  ul.appendChild(li);
+  alert(li.id); }
+
+function freeze() {
+	//document.body.attachEvent("onclick", unfreeze);
+	document.body.addEventListener('click', unfreeze, true);
+	$("#frozen").addClass("freeze");
+	$("#stamp").addClass("temporary"); }
+
+function unfreeze() {
+	//alert('now');
+	document.body.removeEventListener('click', unfreeze, true);
+	$("#frozen").removeClass("freeze"); 
+	$("#stamp").removeClass("temporary"); }</script>
+
+<style>
+
+.freeze { visibility: visible !important; opacity: 1 !important; }
+
+#stamp { padding: 12 12 12 12; border-radius: 4px; border: solid black 2px; width: 160px; text-align: center; font-family: Roboto; }
+#stamp:hover { background-color: lightgrey; cursor: pointer; }
+
+.temporary { background-color: lightgrey; cursor: default!important; }
+
+.form-group { position: relative; margin-bottom: 1.5rem; font-family: Roboto; }
+.form-control-placeholder {
+  	position: absolute; top: 0;
+  	margin-left: -180px; margin-top: 4px; padding: 2 2 2 2;
+	-webkit-transition: all 200ms; -moz-transition: all 200ms; -o-transition: all 200ms;
+  	transition: all 200ms; opacity: 0.5; z-index: 4;
+  	background-color: white; }
+
+input { border: solid lightgray 1px; border-radius: 4px; height: 32px; padding: 10 10 10 10;  }
+input:focus { border: solid green 2px; border-radius: 4px; outline:none; box-shadow: 0.5px 0.5px #888888; }
+
+.form-control:focus + .form-control-placeholder,
+.form-control:valid + .form-control-placeholder { font-size: 75%; 
+-webkit-transform: translate3d(0, -60%, 0);
+  -moz-transform:    translate3d(0, -60%, 0);
+  -ms-transform:     translate3d(0, -60%, 0);
+  -o-transform:      translate3d(0, -60%, 0);
+transform: translate3d(0, -60%, 0); opacity: 1; color: darkgreen; }
+
+@media screen and (max-height: 450px) { .sidenav {padding-top: 15px;} .sidenav a {font-size: 18px;} }</style>
+
+Hello, msebolt<br/><br/>
+
+<div id="stamp" class="tooltip" onclick="freeze();"><div id="datetime"></div>
+  <span id="frozen" class="tooltiptext">
+	  <input type="radio" name="formats" value="hh:mm PP on dd, RR DD, YYYY" onchange="datetime=this.value; $('#format').value(this.value); "> Formal<br>
+		<input type="radio" name="formats" value="YYYY.MM.DD HH:mm:SS" onchange="datetime=this.value;"> Informal<br>
+		<input type="radio" name="formats" value="other" onchange="$('#format').prop('disabled', false);"> Custom  <input id="format" disabled="true" value="YYYY.MM.DD HH:mm:SS" type="text" onfocusout="datetime=this.value;"/></span></div>
+
+<br/><br/>
+<button onclick="startTimer();">Start</button>
+<div id="timer"></div>
+<input id="pulledDate" type="text" />
+<button onclick="pullTime();">Pull</button>
+
+<div id="board"></div>
+<input type="checkbox" />
+
+#template { position: absolute; z-index: 9; background-color: #f1f1f1; border: 1px solid #d3d3d3; text-align: center; }
+#templateheader { padding: 10px; cursor: move; z-index: 10; background-color: #2196F3; color: #fff; }
+
+    // primary concern is being able to launch file browser/editor...
+    // for sharing, need to designate public/private, read/write
+
+    //JSON.parse(response)
 calendar.svg, clock.svg, hourglass.svg, reminder.svg, reminder-off.svg, stopwatch.svg

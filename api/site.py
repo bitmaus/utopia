@@ -71,3 +71,33 @@ class MainHandler(tornado.web.RequestHandler):
             self.write("Your cookie was not set yet!")
         else:
             self.write("Your cookie was set!")
+
+http_server = httpserver.HTTPServer(application1)
+http_server.listen(8080)    # NOTE - port 8080
+
+...
+http_server2 = httpserver.HTTPServer(application2)
+http_server2.listen(8081)   # NOTE - port 8081
+
+ioloop.IOLoop.instance().start()
+
+
+import tornado.httpserver
+import tornado.ioloop
+import tornado.web
+
+class getToken(tornado.web.RequestHandler):
+    def get(self):
+        self.write("hello")
+
+application = tornado.web.Application([
+    (r'/', getToken),
+])
+
+if __name__ == '__main__':
+    http_server = tornado.httpserver.HTTPServer(application, ssl_options={
+        "certfile": "/var/pyTest/keys/ca.csr",
+        "keyfile": "/var/pyTest/keys/ca.key",
+    })
+    http_server.listen(443)
+    tornado.ioloop.IOLoop.instance().start()
