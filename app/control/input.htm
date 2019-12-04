@@ -692,3 +692,12 @@ data.append("myfile", myBlob, "filename.txt");
 </script>
 
 poll.svg, poll-h.svg
+
+<input type="file" accept="video/*" capture >
+
+Just to update this, the standard now is:
+
+<input type="file" name="image" accept="image/*" capture="environment">
+to access the environment-facing (rear) camera, and
+
+<input type="file" name="image" accept="image/*" capture="user">
