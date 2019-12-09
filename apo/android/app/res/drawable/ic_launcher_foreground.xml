@@ -1,0 +1,12 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:height="108dp"
+        android:viewportHeight="48.0"
+        android:viewportWidth="48.0"
+        android:width="108dp">
+    <path
+        android:fillColor="@color/ic_launcher_shadow"
+        android:pathData="<your shadow's path>"/>
+    <!-- This is your shape drawn on top of your shadow -->
+    <path 
+        android:pathData="<your path>"/>
+</vector>

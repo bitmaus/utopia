@@ -1,6 +1,7 @@
 
-<style>
-    .icon img { width: 24px; height: 24px; }</style>
+include calculator, way to add svg math/science functions/symbols (see MathJax?), ledger, shopping cart... calculator.svg, divide.svg, equals.svg, greater-than.svg, greater-than-equal.svg, less-than.svg, less-than-equal.svg, minus.svg, not-equal.svg, percent.svg, percentage.svg, plus.svg, square-root-alt.svg, times.svg, signature.svg
+
+from tree.htm
 
 <div class="icon" id="payments">
 <img src="cc-visa.svg" />
@@ -15,77 +16,30 @@
 
 <img src="monero.svg" />
 
-include calculator, way to add svg math/science functions/symbols (see MathJax?)
-include ledger
+<canvas id="canvas" height="140" width="140"></canvas>
+    <button onclick="drawForest();">Draw</button><button onclick="clearForest();">Clear</button>
 
-calculator.svg, divide.svg, equals.svg, greater-than.svg, greater-than-equal.svg, less-than.svg, less-than-equal.svg, minus.svg, not-equal.svg, percent.svg, percentage.svg, plus.svg, square-root-alt.svg, times.svg
-
-
-signature.svg
-
-
-from tree.htm
-
-<html>
-<head>
 <script>
-    function clearForest() {
-		canvas = document.getElementById("canvas");
-		const context = canvas.getContext('2d');
-        context.clearRect(0, 0, canvas.width, canvas.height); }
+function clearForest() {canvas = document.getElementById("canvas");const context = canvas.getContext('2d');context.clearRect(0, 0, canvas.width, canvas.height); }
 			
-    function drawForest() {
-	    for (a=0; a < 5; a++)
-	    {
-		    drawTree(); } }
+function drawForest() {for (a=0; a < 5; a++){drawTree(); } }
 
-	function drawTree() {
-		var leftRoot = [35,110];
-		var leftTrunk = [45,45];
-		var leftCurve = [leftRoot[0]+30,leftRoot[1]-20];
-
-		var rightRoot = [75,105];
-		var rightTrunk = [55,35];
-		var rightCurve = [leftCurve[0], leftCurve[1]];
-
-		var bottomBranch = [10,30];
-		var bottomLeaf = [70,25];
-		var bottomCurve = [bottomBranch[0]+30,bottomBranch[1]-50];
-
-		var topBranch = [15,60];
-		var topLeaf = [105,15];
-		var topCurve = [bottomCurve[0]+5,bottomCurve[1]];
-
-		var growth = Math.floor(Math.random() * 10) - 5;
+function drawTree() {
+	var leftRoot = [35,110], leftTrunk = [45,45], leftCurve = [leftRoot[0]+30,leftRoot[1]-20], rightRoot = [75,105], rightTrunk = [55,35], rightCurve = [leftCurve[0], leftCurve[1]], bottomBranch = [10,30], bottomLeaf = [70,25], bottomCurve = [bottomBranch[0]+30,bottomBranch[1]-50], topBranch = [15,60], topLeaf = [105,15], topCurve = [bottomCurve[0]+5,bottomCurve[1]], growth = Math.floor(Math.random() * 10) - 5;
 		
-        canvas = document.getElementById("canvas");
-        ctx = canvas.getContext("2d")
-        ctx.lineWidth = 2;
+    canvas = document.getElementById("canvas");ctx = canvas.getContext("2d")ctx.lineWidth = 2;
 
-        ctx.strokeStyle = "#7a3b07"; //light brown
-        ctx.beginPath();
-        ctx.moveTo(leftRoot[0]+growth, leftRoot[1]+growth);
-        ctx.quadraticCurveTo(leftCurve[0]+growth, leftCurve[1]+growth, leftTrunk[0]+growth, leftTrunk[1]+growth);
-        ctx.stroke();
+    ctx.strokeStyle = "#7a3b07"; //light brown
+    ctx.beginPath();ctx.moveTo(leftRoot[0]+growth, leftRoot[1]+growth);ctx.quadraticCurveTo(leftCurve[0]+growth, leftCurve[1]+growth, leftTrunk[0]+growth, leftTrunk[1]+growth);ctx.stroke();
 					
-        ctx.strokeStyle = "#512704"; //dark brown
-        ctx.beginPath();
-        ctx.moveTo(rightRoot[0]+growth, rightRoot[1]+growth);
-        ctx.quadraticCurveTo(rightCurve[0]+growth, rightCurve[1]+growth, rightTrunk[0]+growth, rightTrunk[1]+growth);
-        ctx.stroke();
+    ctx.strokeStyle = "#512704"; //dark brown
+    ctx.beginPath();ctx.moveTo(rightRoot[0]+growth, rightRoot[1]+growth);ctx.quadraticCurveTo(rightCurve[0]+growth, rightCurve[1]+growth, rightTrunk[0]+growth, rightTrunk[1]+growth);ctx.stroke();
 
-        ctx.strokeStyle = "#0f8c0f"; //light green
-        ctx.beginPath();
-        ctx.moveTo(bottomBranch[0]+growth, bottomBranch[1]+growth);
-        ctx.quadraticCurveTo(bottomCurve[0]+growth, bottomCurve[1]+growth, bottomLeaf[0]+growth, bottomLeaf[1]+growth);
-        ctx.stroke();
+    ctx.strokeStyle = "#0f8c0f"; //light green
+    ctx.beginPath();ctx.moveTo(bottomBranch[0]+growth, bottomBranch[1]+growth);ctx.quadraticCurveTo(bottomCurve[0]+growth, bottomCurve[1]+growth, bottomLeaf[0]+growth, bottomLeaf[1]+growth);ctx.stroke();
 
-        ctx.strokeStyle = "#084408"; //dark green
-        ctx.beginPath();
-        ctx.moveTo(topBranch[0]+growth, topBranch[1]+growth);
-        ctx.quadraticCurveTo(topCurve[0]+growth, topCurve[1]+growth, topLeaf[0]+growth, topLeaf[1]+growth);
-        ctx.stroke(); }</script>
+    ctx.strokeStyle = "#084408"; //dark green
+    ctx.beginPath();ctx.moveTo(topBranch[0]+growth, topBranch[1]+growth);ctx.quadraticCurveTo(topCurve[0]+growth, topCurve[1]+growth, topLeaf[0]+growth, topLeaf[1]+growth);ctx.stroke(); }</script>
 
-<body>
-    <canvas id="canvas" height="140" width="140"></canvas>
-    <button onclick="drawForest();">Draw</button><button onclick="clearForest();">Clear</button></body>
+<style>
+    .icon img { width: 24px; height: 24px; }</style>

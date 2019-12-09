@@ -4,7 +4,6 @@ from bson.json_util import dumps
 from bson.objectid import ObjectId
 
 import base64
-
 import os, sys, json
 import secrets
 
@@ -17,6 +16,8 @@ database = client["tree"]
 collection = database["tokens"]
 
 # secure cookies sent from tornado...
+
+# initiate to authenticate (create or update) to authorize with expiration
 
 def process(token, status, hash):
     #...generate token
@@ -34,11 +35,11 @@ def process(token, status, hash):
             password = hash.password
             token = hash.token
 
-            exists_query = {"user":user, "password":password, "client_token":token, "email":"true"}
+            exists_query = {"user":user, "password":password, "client_token":token, "email":"true"} # check expiration also...
             result = collection.find(query)
 
             if result:
-                value = { "$set": { "client_token":token, "server_token":process_token, "status":status } }
+                value = { "$set": { "client_token":token, "server_token":process_token, "status":"accept" } } # set expiration date also...
                 collection.update_one(exists_query, value))
             else:
                 value = { "$set": { "user":user, "password":password, "client_token":token, "server_token":process_token, "status":status, "email":"false" } }

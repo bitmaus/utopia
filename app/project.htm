@@ -1,10 +1,9 @@
 
-include project view...
+include project view... also include, cut.svg, copy.svg, paste.svg, trash-alt.svg, share.svg, share-alt-square.svg, undo-alt.svg, redo-alt.svg
+
 <img src="tree.jpg" />
 <img src="branch.jpg" />
 <img src="leaf.jpg" />
-also include, cut.svg, copy.svg, paste.svg, trash-alt.svg, share.svg, share-alt-square.svg, undo-alt.svg, redo-alt.svg
-
 <img src="archive.svg" />
 
 <div id="panel">
@@ -14,75 +13,36 @@ also include, cut.svg, copy.svg, paste.svg, trash-alt.svg, share.svg, share-alt-
 	<div id="branch"><img src="apt/icon/branch.jpg" class="icon" /><span>branch name</span></div>
 	<div id="leaf"><div class="panel-item"><img src="apt/icon/leaf.svg" class="icon" /><span>leaf name</span></div>
 
-<style>
-#panel { height:100%; }
-#project { height:100%; width: 30%; background-color:antiquewhite; display: inline-block; vertical-align: top; text-align: center; }
-
-.panel { border: green solid 1px; border-radius: 4px; width: 50%; padding: 12 12 12 12; margin: 12 12 12 12; background-color:honeydew; display: inline-block; }
-.panel-item { display: flex; align-items: center; }
-.panel-item:hover { border: solid 1px black; border-radius: 2px; }</style>
-
-<script>
-function Forest() { this.trees = []; }
-function Tree () { this.name = ""; this.branches = []; }
-function Branch () { this.name = ""; this.leaves = []; }
-function Leaf () { this.name = ""; this.content = ""; }
-
-var myForest = new Forest();
-myForest.trees.add(new Tree());
-myForest.trees[0].name = "demo tree";
-myForest.trees[0].branches.add(new Branch());
-myForest.trees[0].branches[0].name = "demo branch";
-myForest.trees[0].branches[0].leaves.add(new Leaf());
-myForest.trees[0].branches[0].leaves[0].name = "demo leaf";
-myForest.trees[0].branches[0].leaves[0].content = "## a sample header";
-
-function loadTree() { $("#forest").append($("#tree").html()); }</script>
-
 <button onclick="loadTree();">Tree</button>
 
 <div id="inputs" class="panel">
-            <div id="input">input</div></div>
+    <div id="input">input</div></div>
 
-        <div id="files" class="panel">
-            <img src="image/icon/file.svg" class="icon" />
-            <div id="file"><img src="image/icon/file-download.svg" class="icon" />file</div></div>
+<div id="files" class="panel">
+    <img src="image/icon/file.svg" class="icon" />
+    <div id="file"><img src="image/icon/file-download.svg" class="icon" />file</div></div>
 
-        <div id="tags" class="panel">
-            <img src="image/icon/tags.svg" class="icon" />
-            <div id="tag"><img src="image/icon/tag.svg" class="icon" />tag</div></div>
+<div id="tags" class="panel">
+    <img src="image/icon/tags.svg" class="icon" />
+    <div id="tag"><img src="image/icon/tag.svg" class="icon" />tag</div></div>
         
-        <div class="ads"><img src="image/ads.png"/></div></div>
+<div class="ads"><img src="image/ads.png"/></div></div>
 
-    <div id="content" style="display: inline-block; vertical-align: top; width: 50%; margin: 12 12 12 12;">
-        <div id="control" style="margin: 12 12 12 12;">
-            <script>
-                function edit() { document.getElementById('text').contentEditable = true; }</script>
-            <div id="format" style="display:inline-block;">
-                <input type="checkbox" onclick="edit();"/>
-                <span>web</span><span>text</span></div>
-            <div id="history" style="display:inline-block;">view <a>history</a> | <a>0 comments</a></div></div>
+<div id="content" style="display: inline-block; vertical-align: top; width: 50%; margin: 12 12 12 12;">
+    <div id="control" style="margin: 12 12 12 12;">
+        <div id="format" style="display:inline-block;">
+            <input type="checkbox" onclick="edit();"/><span>web</span><span>text</span></div>
+        <div id="history" style="display:inline-block;">view <a>history</a> | <a>0 comments</a></div></div>
 
-        <div id="subject" style="margin: 12 12 12 12;">
-            <div id="title">
-                Build a server</div>
-            <div id="info">
-                <img src="user.png" /> | 8/26/2019 | 468 kB</div></div>
+    <div id="subject" style="margin: 12 12 12 12;">
+        <div id="title">Build a server</div>
+        <div id="info"><img src="user.png" /> | 8/26/2019 | 468 kB</div></div>
 
-        <div id="text" style="margin: 12 12 12 12;">
-            <div id="md" style="height:240px; width: 240px;" contenteditable="true"></div>
-            <div id="markdown">test</div>
+    <div id="text" style="margin: 12 12 12 12;">
+        <div id="md" style="height:240px; width: 240px;" contenteditable="true"></div>
+        <div id="markdown">test</div>
             <button onclick="getMd();">Get</button><button onclick="saveMd();">Save</button><button onclick="renderMd();">Render</button><button onclick="updateMe()">Update</button>
-            <script>
-                function getMd() { service("http://192.168.1.111:8887/tree/add", { name:"matt", md: $('#md').html() }, alert('yes')); }         
-                function saveMd() { service("http://192.168.1.111:8887/tree/edit", { name:"matt", md: $('#md').html() }, alert('yes')); }
-                function renderMd() { service("http://192.168.1.111:8888/markdown", { md: $('#md').html() }, alert('yes')); }
-                function updateMe() { $('#markdown').html(holder); }
-
-function tutorial() { $.get('temp.md', function(data) { alert(data); service("http://192.168.1.111:8888/markdown", { md: data }, alert('yes')); }, 'text'); }</script>
-            <p>Build a stack...</p>
-            <img src="image/sample.png" />
-            <p>caption</p>
+            <p>Build a stack...</p><img src="image/sample.png" /><p>caption</p>
             <ul>
                 <li>fast</li>
                 <li>big</li></ul>
@@ -95,25 +55,21 @@ function tutorial() { $.get('temp.md', function(data) { alert(data); service("ht
                 setup</code>
             <p>See <a>How to run</a> for more...</p></div>
 
-        <div id="list" style="margin: 12 12 12 12;">
-            <div id="download" style="display:inline-block;">
-                <a><img src="image/icon/file-download.svg" class="icon" />test.jpg (86 kB)</a><br/>
-                <a><img src="image/icon/file-download.svg" class="icon" />text.pdf (124 kB)</a></div>
-            <div id="mark" style="display:inline-block;">
-                <span style="background-color: red;"><img src="image/icon/tag.svg" class="icon" /> donate</span></br/>
-                <span style="background-color: yellow;"><img src="image/icon/tag.svg" class="icon" /> caution</span></div></div></div>
+    <div id="list" style="margin: 12 12 12 12;">
+        <div id="download" style="display:inline-block;">
+            <a><img src="image/icon/file-download.svg" class="icon" />test.jpg (86 kB)</a><br/>
+            <a><img src="image/icon/file-download.svg" class="icon" />text.pdf (124 kB)</a></div>
+        <div id="mark" style="display:inline-block;">
+            <span style="background-color: red;"><img src="image/icon/tag.svg" class="icon" /> donate</span></br/>
+            <span style="background-color: yellow;"><img src="image/icon/tag.svg" class="icon" /> caution</span></div></div></div>
 
-    <div id="tool" style="display: inline-block; vertical-align: top; background-color: green;">
-        <div id="box">Toolbox</div>
-
-        <div id="editor">tabs for Text, Preview...</div>
-
-        <div id="example"><a>Basic example</a><a>Advanced example</a></div>
-
-        <div class="ads"><img src="image/ads.png" /></div></div></div>
+<div id="tool" style="display: inline-block; vertical-align: top; background-color: green;">
+    <div id="box">Toolbox</div>
+    <div id="editor">tabs for Text, Preview...</div>
+    <div id="example"><a>Basic example</a><a>Advanced example</a></div>
+    <div class="ads"><img src="image/ads.png" /></div></div></div>
 
 <div id="footer" style="background-color: gray;"><div id="contact">Treeop, Inc. tree@treeop.com</div>
-
     <div id="bitmaus"><img src="image/icon/bit.jpg" /></div></div>
 
 <div id="template">
@@ -129,9 +85,38 @@ function tutorial() { $.get('temp.md', function(data) { alert(data); service("ht
 <div id="tree"></div>
 <div id="tree_view"></div>
 
-<script>var types = ["link"]; $("#tree").load("ui.htm", loadTypes()); // load edit templates also...
+<script>
+function edit() { document.getElementById('text').contentEditable = true; }
 
-	function loadTypes() {
-	for(i=0;i<types.length;i++) { $('#'+types[i]+'_edit').parent().detach().appendTo($('#tree_edit')); } }
+function getMd() { service("http://192.168.1.111:8887/tree/add", { name:"matt", md: $('#md').html() }, alert('yes')); }         
+function saveMd() { service("http://192.168.1.111:8887/tree/edit", { name:"matt", md: $('#md').html() }, alert('yes')); }
+function renderMd() { service("http://192.168.1.111:8888/markdown", { md: $('#md').html() }, alert('yes')); }
+function updateMe() { $('#markdown').html(holder); }
 
-</script>
+function tutorial() { $.get('temp.md', function(data) { alert(data); service("http://192.168.1.111:8888/markdown", { md: data }, alert('yes')); }, 'text'); }
+
+function Forest() { this.trees = []; }
+function Tree () { this.name = ""; this.branches = []; }
+function Branch () { this.name = ""; this.leaves = []; }
+function Leaf () { this.name = ""; this.content = ""; }
+
+var myForest = new Forest();
+myForest.trees.add(new Tree());
+myForest.trees[0].name = "demo tree";
+myForest.trees[0].branches.add(new Branch());
+myForest.trees[0].branches[0].name = "demo branch";
+myForest.trees[0].branches[0].leaves.add(new Leaf());
+myForest.trees[0].branches[0].leaves[0].name = "demo leaf";
+myForest.trees[0].branches[0].leaves[0].content = "## a sample header";
+
+function loadTree() { $("#forest").append($("#tree").html()); }
+var types = ["link"]; $("#tree").load("ui.htm", loadTypes()); // load edit templates also...
+function loadTypes() { for(i=0;i<types.length;i++) { $('#'+types[i]+'_edit').parent().detach().appendTo($('#tree_edit')); } }</script>
+
+<style>
+#panel { height:100%; }
+#project { height:100%; width: 30%; background-color:antiquewhite; display: inline-block; vertical-align: top; text-align: center; }
+
+.panel { border: green solid 1px; border-radius: 4px; width: 50%; padding: 12 12 12 12; margin: 12 12 12 12; background-color:honeydew; display: inline-block; }
+.panel-item { display: flex; align-items: center; }
+.panel-item:hover { border: solid 1px black; border-radius: 2px; }</style>

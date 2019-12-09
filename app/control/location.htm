@@ -1,112 +1,46 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-        
-        <script>
-		//app requests permission to access positional data...
+﻿
+local adventure map/diagram (see <a href="https://en.wikipedia.org/wiki/Washington_(state)">history</a>), include Michigan
 
-//clearWatch stops listening for updates position
-//location.getCurrentPosition obtains position in latitude/longitude 
-
-//$(function () {
-function startLocation() {
-    var watchID;
-
-   // $("#watch").click(function () {
-        //if (Modernizr.geolocation) {
-            var nav = window.navigator;
-
-            if (nav != null) {
-                var geoloc = nav.geolocation;
-                watchID = geoloc.watchPosition(successCallback, errorCallback); } //}
-        //else
-       // { $("#message").text("You'll need to enter your address manually."); } 
-      // }); });
-      }
-
-function successCallback(position) {
-    var latitude = position.coords.latitude;
-    var longitude = position.coords.longitude;
-
-	alert('There you are at ' + latitude + ' ' + longitude);
-    //$("#message").text("There you are at " + latitude + " " + longitude); 
-    }
-
-function errorCallback(error) {
-    switch (error.code) {
-        case error.PERMISSION_DENIED: 
-
-            alert("User did not share geolocation data");
-            break;
-        case error.POSITION_UNAVAILABLE: 
-
-            alert("Could not detect current position");
-            break;
-        case error.TIMEOUT: 
-
-            alert("Time out");
-            break;
-        default: 
-
-            alert("Unknown error");
-            break;  } } 
-
-        </script>
-	</head>
-	<body>
-<button onclick="startLocation();">Location</button><button>Add Location</button>
-	<div>
-        <span>Location Name</span><button>Edit</button><button>Delete</button>
-        list of tags...
-        device information...
-        <a>Open Map</a>
-    </div>
-	</body>
-</html>
+compass.svg, directions.svg, location-arrow.svg, map-marked-alt.svg, map-marker-alt.svg, map-pin.svg
 
 <!--
-
     sample data...
-
 { 
     name: Vancouver Island,
     latitude: 50.0841536,
     longitude: -127.0120676,
     tags: [],
-
     device:
     datetime:
 }
 
-    Mount Rainer(Ohanapikash camp)/Adams/St Helens/Hood(Oregon), Cowlitz (milky river, glacier, grove of the patriarchs)
-
+Mount Rainer(Ohanapikash camp)/Adams/St Helens/Hood(Oregon), Cowlitz (milky river, glacier, grove of the patriarchs)
 Kenai Fjords National Park, Alaska
 California Lost Coasts
 White Mountain National Forest
 Widewater State Park
 Theodore Roosevelt's historic ranch in North Dakota
-
 McMennamins
-
 rotary park with climbing wall
-
 Seattle
-
 Washington
-
 Michigan for holidays and family
-
 bao @ Dough Zone
-
 church
-
 local diner/tavern/bar, buy hamburger/beer and pay with 2 gold coins
 ...Gunslinger tag on a restaurant
--->
+
 
 "Tracker" app (map Vantage via maps, be able to set decoys as Decoy app)
 3D treasure hunt, maps/Wikipedia hooks
-GPS permanent attachments with decoys
+GPS permanent attachments with decoys-->
+        
+<button onclick="startLocation();">Location</button><button>Add Location</button>
+<div>
+    <span>Location Name</span><button>Edit</button><button>Delete</button>
+    list of tags...
+    device information...
+    <a>Open Map</a></div>
 
 <iframe id="map" width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" 
 	src="https://www.openstreetmap.org/export/embed.html?bbox=-122.52687010914089%2C47.51031465340279%2C-121.89103636890651%2C47.92837579703594&amp;layer=mapnik" style="border: 1px solid black"></iframe>
@@ -126,8 +60,6 @@ var offset_lon = 0.63583374023438;
 var offset_lat = 0.41806114363315;
 var set_lat = vc_island_lat;
 var set_lon = vc_island_lon;
-//var set_lat = home_lat;
-//var set_lon = home_lon;
 
 var lower_lat = String(set_lat - (offset_lat / 2));
 var higher_lat = String(set_lat + (offset_lat / 2));
@@ -141,9 +73,7 @@ src += '%2C' + higher_lat;
 src += '%2C' + higher_lon;
 src += '&amp;layer=mapnik';
 
-function setMap() {
-document.getElementById("map").src = src;
-}
+function setMap() { document.getElementById("map").src = src; }
 </script>
 
 <!--
@@ -166,16 +96,29 @@ src += '%2C' + '47.92837579703594';
         var position       = new OpenLayers.LonLat(vc_island_lon,vc_island_lat).transform( fromProjection, toProjection);
         var zoom           = 15; 
 
-        map.addLayer(mapnik);
-        map.setCenter(position, zoom );
-      }
-    </script>
-
+        map.addLayer(mapnik); map.setCenter(position, zoom ); }</script>
 
     <div id="basicMap" style="width:240px; height:240px;"></div>
 
-local adventure map/diagram (see <a href="https://en.wikipedia.org/wiki/Washington_(state)">history</a>), include Michigan
+<script>
+//app requests permission to access positional data...
+//clearWatch stops listening for updates position
+//location.getCurrentPosition obtains position in latitude/longitude 
 
-compass.svg, directions.svg, location-arrow.svg, map-marked-alt.svg, map-marker-alt.svg, map-pin.svg
+function startLocation() { var watchID, nav = window.navigator; if (nav != null) { var geoloc = nav.geolocation; watchID = geoloc.watchPosition(successCallback, errorCallback); } }
+function successCallback(position) { var latitude = position.coords.latitude, longitude = position.coords.longitude; alert('There you are at ' + latitude + ' ' + longitude); }
 
-
+function errorCallback(error) {
+    switch (error.code) {
+        case error.PERMISSION_DENIED: 
+            alert("User did not share geolocation data");
+            break;
+        case error.POSITION_UNAVAILABLE: 
+            alert("Could not detect current position");
+            break;
+        case error.TIMEOUT: 
+            alert("Time out");
+            break;
+        default: 
+            alert("Unknown error");
+            break;  } }</script>

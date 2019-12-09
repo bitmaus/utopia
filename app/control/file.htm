@@ -1,65 +1,151 @@
+
+download.svg, file-alt.svg, file-signature.svg, folder.svg, folder-minus.svg, folder-open.svg, folder-plus.svg, upload.svg
+
+from media...
+
+play.svg, pause.svg, stop.svg, backward.svg, forward.svg, fast-backward.svg, fast-forward.svg, film.svg, music.svg, rss-square.svg, step-backward.svg, step-forward.svg
+
+inlcude folder/file explorer
+function createTree()
+{
+    <div class="parent"
+    <div class="folder parent/child"><div class="file"></div></div>
+    parent folder to parent/child folder[...] or child file
+}
+folder (book), file (paper)
+
+use database for (stamps)
+...email
+...messages
+...tags
+...user/account
+
+import os
+os.listdir("path")
+
+To open a text file, use:
+fh = open("hello.txt", "r")
+
+To read a text file, use:
+fh = open("hello.txt","r")
+print fh.read()
+
+To read one line at a time, use:
+fh = open("hello".txt", "r")
+print fh.readline()
+
+To read a list of lines use:
+fh = open("hello.txt.", "r")
+print fh.readlines()
+
+To write to a file, use:
+fh = open("hello.txt","w")
+write("Hello World")
+fh.close()
+
+To write to a file, use:
+fh = open("hello.txt", "w")
+lines_of_text = ["a line of text", "another line of text", "a third line"]
+fh.writelines(lines_of_text)
+fh.close()
+
+import os
+
+path = "c:\\python25"
+
+i = 0
+for (path, dirs, files) in os.walk(path):
+    print path
+    print dirs
+    print files
+    print "----"
+    i += 1
+    if i >= 4:
+        break
+
+add drag and drop?
+
+...larg files 
+var blob = file.slice(startingByte, endindByte);
+reader.readAsBinaryString(blob);
+
+directory contents...
+function listResults(entries) {
+
+//remove directory... 
+//copy, move, rename...
+
 <input  id="file_input"  type="file" webkitdirectory directory  /> 
+
+<p>Drag files and/or directories to the box below!</p>
+
+<div id="dropzone">
+<div id="boxtitle">Drop Files Here</div></div>
+
+<h2>Directory tree:</h2>
+
+<ul id="listing"></ul>
+
+<div id="drop_zone">Drop files here</div>
+<output id="list"></output>
+
+<input type="file" id="files2" name="files2[]" multiple />
+
+<input type="file" id="files4" name="file4" />
+<button onclick="abortRead();">Cancel read</button>
+<div id="progress_bar"><div class="percent">0%</div></div>
+
+<p>Drag files and/or directories to the box below!</p>
+<div id="dropzone"><div id="boxtitle">Drop Files Here</div></div>
+
+<h2>Directory tree:</h2>
+<ul id="listing"></ul>
+
+<input type="file" id="holder" />
+
+<input type="file" id="files" name="files[]" multiple />
+<output id="list"></output>
+
+<script>
+  // Check for the various File API support.
+if (window.File && window.FileReader && window.FileList && window.Blob) {
+  // Great success! All the File APIs are supported.
+} else {
+  alert('The File APIs are not fully supported in this browser.');
+}
+
+  function handleFileSelect(evt) {
+    var files = evt.target.files; // FileList object
+
+    // files is a FileList of File objects. List some properties.
+    var output = [];
+    for (var i = 0, f; f = files[i]; i++) {
+      output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+                  f.size, ' bytes, last modified: ',
+                  f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
+                  '</li>');
+    }
+    document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+  }
+
+  document.getElementById('files').addEventListener('change', handleFileSelect, false);
+</script>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>
-
-
 var filenames=[], foldernames=[];
 
 $.get("file:///C:/Users/v-masebo/Desktop",function(response){
     document.write(response);
-    getNames();
-});
+    getNames();});
 
-function getNames()
-{
+function getNames(){
     var files = document.querySelectorAll("a.icon.file");
     var folders = document.querySelectorAll("a.icon.dir");
     files.forEach(function(item){filenames.push(item.textContent)})
     folders.forEach(function(item){foldernames.push(item.textContent.slice(0,-1))})
     console.log(filenames);
-    console.log(foldernames);
-}
-    </script>
-
-    <style>
-#dropzone {
-  text-align: center;
-  width: 300px;
-  height: 100px;
-  margin: 10px;
-  padding: 10px;
-  border: 4px dashed red;
-  border-radius: 10px;
-}
-
-#boxtitle {
-  display: table-cell;
-  vertical-align: middle;
-  text-align: center;
-  color: black;
-  font: bold 2em "Arial", sans-serif;
-  width: 300px;
-  height: 100px;
-}
-
-body {
-  font: 14px "Arial", sans-serif;
-}
-</style>
-<p>Drag files and/or directories to the box below!</p>
-
-<div id="dropzone">
-  <div id="boxtitle">
-    Drop Files Here
-  </div>
-</div>
-
-<h2>Directory tree:</h2>
-
-<ul id="listing">
-</ul>
-
-<script>
+    console.log(foldernames);}
 
 let dropzone = document.getElementById("dropzone");
 let listing = document.getElementById("listing");
@@ -75,15 +161,9 @@ function scanFiles(item, container) {
     container.appendChild(directoryContainer);
     directoryReader.readEntries(function(entries) {
         entries.forEach(function(entry) {
-          scanFiles(entry, directoryContainer);
-      });
-    });
-  }
-}
+          scanFiles(entry, directoryContainer);});});}}
 //prevent default dragover behavior
-dropzone.addEventListener("dragover", function(event) {
-    event.preventDefault();
-}, false);
+dropzone.addEventListener("dragover", function(event) {event.preventDefault();}, false);
 //handle the drop event
 dropzone.addEventListener("drop", function(event) {
   let items = event.dataTransfer.items;
@@ -93,23 +173,9 @@ dropzone.addEventListener("drop", function(event) {
  
   for (let i=0; i<items.length; i++) {
     let item = items[i].webkitGetAsEntry();
+    if (item) {scanFiles(item, listing);}}}, false);
     
-    if (item) {
-        scanFiles(item, listing);
-    }
-  }
-}, false);
-
-
-</script>
-
-download.svg, file-alt.svg, file-signature.svg, folder.svg, folder-minus.svg, folder-open.svg, folder-plus.svg, upload.svg
-
-from media...
-
-play.svg, pause.svg, stop.svg, backward.svg, forward.svg, fast-backward.svg, fast-forward.svg, film.svg, music.svg, rss-square.svg, step-backward.svg, step-forward.svg
-
-//broadcasting side 
+    //broadcasting side 
   navigator.mediaDevices.getUserMedia({audio: true,video: false}) // request cam
         .then(stream => {
          vid.srcObject = stream;
@@ -196,12 +262,9 @@ function int16ToFloat32(inputArray) {
             output[i] = float;
         }
         return output;}
-
-<div id="drop_zone">Drop files here</div>
-<output id="list"></output>
-
-<script>
-  function handleFileSelect(evt) {
+        
+        
+        function handleFileSelect(evt) {
     evt.stopPropagation();
     evt.preventDefault();
 
@@ -228,65 +291,7 @@ function int16ToFloat32(inputArray) {
   var dropZone = document.getElementById('drop_zone');
   dropZone.addEventListener('dragover', handleDragOver, false);
   dropZone.addEventListener('drop', handleFileSelect, false);
-</script>
-
-
-<style>
-  .thumb {
-    height: 75px;
-    border: 1px solid #000;
-    margin: 10px 5px 0 0;
-  }
-</style>
-
-<input type="file" id="files2" name="files2[]" multiple />
-
-</script>
-
-...larg files 
-var blob = file.slice(startingByte, endindByte);
-reader.readAsBinaryString(blob);
-
-<style>
-  #byte_content {
-    margin: 5px 0;
-    max-height: 100px;
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-  #byte_range { margin-top: 5px; }
-</style>
-
-
-monitor progress... 
-
-<style>
-  #progress_bar {
-    margin: 10px 0;
-    padding: 3px;
-    border: 1px solid #000;
-    font-size: 14px;
-    clear: both;
-    opacity: 0;
-    -moz-transition: opacity 1s linear;
-    -o-transition: opacity 1s linear;
-    -webkit-transition: opacity 1s linear;
-  }
-  #progress_bar.loading {
-    opacity: 1.0;
-  }
-  #progress_bar .percent {
-    background-color: #99ccff;
-    height: auto;
-    width: 0;
-  }
-</style>
-
-<input type="file" id="files4" name="file4" />
-<button onclick="abortRead();">Cancel read</button>
-<div id="progress_bar"><div class="percent">0%</div></div>
-
-<script>
+  
   var reader;
   var progress = document.querySelector('.percent');
 
@@ -348,62 +353,8 @@ monitor progress...
   }
 
   document.getElementById('files4').addEventListener('change', handleFileSelect, false);
-</script>
-
-
-directory contents...
-
-function listResults(entries) {
-
-
-//remove directory... 
-
-//copy, move, rename...
-
-
-</script>
-
-<style>
-#dropzone {
-  text-align: center;
-  width: 300px;
-  height: 100px;
-  margin: 10px;
-  padding: 10px;
-  border: 4px dashed red;
-  border-radius: 10px;
-}
-
-#boxtitle {
-  display: table-cell;
-  vertical-align: middle;
-  text-align: center;
-  color: black;
-  font: bold 2em "Arial", sans-serif;
-  width: 300px;
-  height: 100px;
-}
-
-body {
-  font: 14px "Arial", sans-serif;
-}
-</style>
-<p>Drag files and/or directories to the box below!</p>
-
-<div id="dropzone">
-  <div id="boxtitle">
-    Drop Files Here
-  </div>
-</div>
-
-<h2>Directory tree:</h2>
-
-<ul id="listing">
-</ul>
-
-<script>
-
-let dropzone = document.getElementById("dropzone");
+  
+  let dropzone = document.getElementById("dropzone");
 let listing = document.getElementById("listing");
 //handle files dropped in
 function scanFiles(item, container) {
@@ -417,15 +368,9 @@ function scanFiles(item, container) {
     container.appendChild(directoryContainer);
     directoryReader.readEntries(function(entries) {
         entries.forEach(function(entry) {
-          scanFiles(entry, directoryContainer);
-      });
-    });
-  }
-}
+          scanFiles(entry, directoryContainer);});});}}
 //prevent default dragover behavior
-dropzone.addEventListener("dragover", function(event) {
-    event.preventDefault();
-}, false);
+dropzone.addEventListener("dragover", function(event) {event.preventDefault();}, false);
 //handle the drop event
 dropzone.addEventListener("drop", function(event) {
   let items = event.dataTransfer.items;
@@ -436,18 +381,8 @@ dropzone.addEventListener("drop", function(event) {
   for (let i=0; i<items.length; i++) {
     let item = items[i].webkitGetAsEntry();
     
-    if (item) {
-        scanFiles(item, listing);
-    }
-  }
-}, false);
-
-</script>
-more attempts...
-<input type="file" id="holder" />
-<script>
-
-holder.ondrop = function (e) {
+    if (item) {scanFiles(item, listing);}}}, false);
+    holder.ondrop = function (e) {
     this.className = '';
     e.preventDefault();
     alert(e.dataTransfer.files);
@@ -474,95 +409,24 @@ function simulateDrop() {
         dataTransfer: { files: [ file ] }, 
         preventDefault: function () {} 
     });
-}
+}</script>
 
+<style>
+#dropzone {text-align: center;width: 300px;height: 100px;margin: 10px;padding: 10px;border: 4px dashed red;border-radius: 10px;}
+#boxtitle {display: table-cell;vertical-align: middle;text-align: center;color: black;font: bold 2em "Arial", sans-serif;width: 300px;height: 100px;}
+body {font: 14px "Arial", sans-serif;}
 
-inlcude folder/file explorer
-function createTree()
-{
-    <div class="parent"
-    <div class="folder parent/child"><div class="file"></div></div>
-    parent folder to parent/child folder[...] or child file
-}
-folder (book), file (paper)
+.thumb {height: 75px;border: 1px solid #000;margin: 10px 5px 0 0;}
+  
+#byte_content {margin: 5px 0;max-height: 100px;overflow-y: auto;overflow-x: hidden;}
+#byte_range { margin-top: 5px; }
+  
+#progress_bar {margin: 10px 0;padding: 3px;border: 1px solid #000;font-size: 14px;clear: both;opacity: 0;-moz-transition: opacity 1s linear;-o-transition: opacity 1s linear;-webkit-transition: opacity 1s linear;}
+#progress_bar.loading {opacity: 1.0;}
+#progress_bar .percent {background-color: #99ccff;height: auto;width: 0;}
+  
+#dropzone {text-align: center;width: 300px;height: 100px;margin: 10px;padding: 10px;border: 4px dashed red;border-radius: 10px;}
 
-use database for (stamps)
-...email
-...messages
-...tags
-...user/account
+#boxtitle {display: table-cell;vertical-align: middle;text-align: center;color: black;font: bold 2em "Arial", sans-serif;width: 300px;height: 100px;}
 
-import os
-os.listdir("path")
-
-To open a text file, use:
-fh = open("hello.txt", "r")
-
-To read a text file, use:
-fh = open("hello.txt","r")
-print fh.read()
-
-To read one line at a time, use:
-fh = open("hello".txt", "r")
-print fh.readline()
-
-To read a list of lines use:
-fh = open("hello.txt.", "r")
-print fh.readlines()
-
-To write to a file, use:
-fh = open("hello.txt","w")
-write("Hello World")
-fh.close()
-
-To write to a file, use:
-fh = open("hello.txt", "w")
-lines_of_text = ["a line of text", "another line of text", "a third line"]
-fh.writelines(lines_of_text)
-fh.close()
-
-import os
-
-path = "c:\\python25"
-
-i = 0
-for (path, dirs, files) in os.walk(path):
-    print path
-    print dirs
-    print files
-    print "----"
-    i += 1
-    if i >= 4:
-        break
-
-
-add drag and drop?
-
-// Check for the various File API support.
-if (window.File && window.FileReader && window.FileList && window.Blob) {
-  // Great success! All the File APIs are supported.
-} else {
-  alert('The File APIs are not fully supported in this browser.');
-}
--->
-
-<input type="file" id="files" name="files[]" multiple />
-<output id="list"></output>
-
-<script>
-  function handleFileSelect(evt) {
-    var files = evt.target.files; // FileList object
-
-    // files is a FileList of File objects. List some properties.
-    var output = [];
-    for (var i = 0, f; f = files[i]; i++) {
-      output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
-                  f.size, ' bytes, last modified: ',
-                  f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
-                  '</li>');
-    }
-    document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
-  }
-
-  document.getElementById('files').addEventListener('change', handleFileSelect, false);
-</script>
+body {font: 14px "Arial", sans-serif;}</style>

@@ -1,5 +1,13 @@
 
+font.svg, indent.svg, subscript.svg, superscript.svg
 
+outdent.svg
+
+also include markdown... (above is for html)
+code.svg, image.svg, link.svg, list-ol.svg, list-ul.svg, table.svg, tasks.svg
+
+from note...
+bug.svg, exclamation-circle.svg, info-circle.svg, lightbulb.svg, question-circle.svg, quote-left.svg, quote-right.svg, star.svg, book.svg
 
 <!-- htm office...
 
@@ -65,17 +73,11 @@ margin:
 review tinymce for missed features
 
 Document editor (html office) (text, spreadsheet with layers, image, data, code), resume maker/document/reference editor
-code signatures, "perfect" font, use recipe example, upload new forms
-
+code signatures, "perfect" font, use recipe example, upload new forms -->
 
 <button onclick="showDirectory();">Directory</button>
 
 <input type="file" webkitdirectory directory multiple/>
-
-<style>
-    #editor { width: 600px }
-    .control img { height: 16px; width: 16px; }
-    .control img:hover { cursor: pointer; background-color: beige; }</style>
 
 <div class="control">
     <img src="align-left.svg" onclick="setStyle('text-align', 'left');" />
@@ -87,22 +89,13 @@ code signatures, "perfect" font, use recipe example, upload new forms
     <img src="bold.svg" onclick="setStyle('font-weight', 'bold');" />
     <img src="italic.svg" onclick="setStyle('font-style', 'italic');" />
     <img src="underline.svg" onclick="setStyle('text-decoration', 'underline');" />
-    <img src="strikethrough.svg" onclick="setStyle('text-decoration', 'line-through');" />
-</div>
+    <img src="strikethrough.svg" onclick="setStyle('text-decoration', 'line-through');" /></div>
 <div id="editor">This is sample text.<br/>With multiple lines...<br/><br/>How does it look with extra long sentences?</div>
 
 <script>
-    function setStyle(style, setting) {
+function setStyle(style, setting) {document.getElementById("editor").style[style] = setting; }</script>
 
-        document.getElementById("editor").style[style] = setting; }</script>
-
-font.svg, indent.svg, subscript.svg, superscript.svg
-
-outdent.svg
-
-also include markdown... (above is for html)
-code.svg, image.svg, link.svg, list-ol.svg, list-ul.svg, table.svg, tasks.svg
-
-from note...
-
-bug.svg, exclamation-circle.svg, info-circle.svg, lightbulb.svg, question-circle.svg, quote-left.svg, quote-right.svg, star.svg, book.svg
+<style>
+#editor { width: 600px }
+.control img { height: 16px; width: 16px; }
+.control img:hover { cursor: pointer; background-color: beige; }</style>

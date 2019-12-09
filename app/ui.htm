@@ -1,33 +1,21 @@
 
 <style>
-.green {background-color: #4CAF50;color: darkgreen;}
-.green:hover {color: #4CAF50;border: 1px solid #4CAF50;}
-.blue {background-color: #3498DB;color: darkblue;}
-.blue:hover {color: #3498DB;border: 1px solid #3498DB;}
-.red {background-color: red;color: darkred;}
-.red:hover {color: red;border: 1px solid red;}
-.yellow {background-color: yellow;color: darkyellow;}
-.yellow:hover {color: yellow;border: 1px solid yellow;}
+.green {background-color: #4CAF50;color: darkgreen;} .green:hover {color: #4CAF50;border: 1px solid #4CAF50;}
+.blue {background-color: #3498DB;color: darkblue;} .blue:hover {color: #3498DB;border: 1px solid #3498DB;}
+.red {background-color: red;color: darkred;} .red:hover {color: red;border: 1px solid red;}
+.yellow {background-color: yellow;color: darkyellow;} .yellow:hover {color: yellow;border: 1px solid yellow;}
 
-.icon { width: 20px; height: 20px; }
-</style>
+.icon { width: 20px; height: 20px; }</style>
 
-<!-- panel/status -->
+<!-- panel/status, needs notification, dialog, toast-->
+check-square.svg, minus-square.svg, plus-square.svg, window-close.svg
+navigation use... arrow-down.svg, arrow-left.svg, arrow-right.svg, arrow-up.svg, caret-square-down.svg, caret-square-left.svg, caret-square-up.svg
 <div id="status"><span id="message">An email has been sent</span><div class="lds-ring"><div></div><div></div><div></div><div></div></div></div>
 
 <script>
-function setStatus(message){
-    $('#message').html(message); $('#status').css('opacity', '1'); $('#status').css('z-index', 0); $('#panel-content').addClass('disabled'); }
-
-function openNav(item) { 
-    $('#'+item).removeClass('hidden');
-    $('#'+item).css('left', event.pageX);
-    $('#'+item).css('top', event.pageY + 48);
-    $('#'+item).css('opacity', 1);
-
-    $('#header-sign').addClass('disabled'); }
-function closeNav() { $('#sign').css('opacity', 0); $('#log').css('opacity', 0);
-$('#header-sign').removeClass('disabled'); $('#panel').css('width', '0'); $('#sign').addClass('hidden'); $('#log').addClass('hidden');}
+function setStatus(message){ $('#message').html(message); $('#status').css('opacity', '1'); $('#status').css('z-index', 0); $('#panel-content').addClass('disabled'); }
+function openNav(item) { $('#'+item).removeClass('hidden'); $('#'+item).css('left', event.pageX); $('#'+item).css('top', event.pageY + 48); $('#'+item).css('opacity', 1); $('#header-sign').addClass('disabled'); }
+function closeNav() { $('#sign').css('opacity', 0); $('#log').css('opacity', 0); $('#header-sign').removeClass('disabled'); $('#panel').css('width', '0'); $('#sign').addClass('hidden'); $('#log').addClass('hidden');}
 
 $(document).click(function(e) { closeNav(); });
 $('#log').click(function(e) { e.stopPropagation(); });
@@ -50,8 +38,7 @@ $('#header-sign').click(function(e) { e.stopPropagation(); });</script>
 <script>
 function makeLink(id, name, href) {
     var link = document.getElementById(id); link.innerText = name; link.href = href;
-    var element = document.createElement("img"); element.setAttribute("src", "https://plus.google.com/_/favicon?domain_url=" + href); link.prepend(element);
-}</script>
+    var element = document.createElement("img"); element.setAttribute("src", "https://plus.google.com/_/favicon?domain_url=" + href); link.prepend(element); }</script>
 
 <style>
 #link { visibility: hidden; }
@@ -70,45 +57,44 @@ a:hover {color: green;}</style>
 .link-button { color: #1c351b; width: 80px; font-weight: bold; padding: 8px; border-radius: 4px; text-align: center;}
 .link-button:hover { cursor: pointer; color: white; }
 .solid-button { background-color:  #3e7c3b; color: #1c351b; width: 80px; box-shadow: 1px 1px  #346631; font-weight: bold; padding: 8px; display: inline-block; text-align: center; border-radius: 4px; text-align: center; }
-.solid-button:hover { cursor: pointer; background-color: #346631; box-shadow: 1px 1px  #31612e; color: white; }</style>
+.solid-button:hover { cursor: pointer; background-color: #346631; box-shadow: 1px 1px  #31612e; color: white; }
+
+.button {background: rgb(247,249,250);background: -moz-linear-gradient(top,  rgba(247,249,250,1) 0%, rgba(240,240,240,1) 100%);background: -webkit-linear-gradient(top,  rgba(247,249,250,1) 0%,rgba(240,240,240,1) 100%);background: -o-linear-gradient(top,  rgba(247,249,250,1) 0%,rgba(240,240,240,1) 100%);background: -ms-linear-gradient(top,  rgba(247,249,250,1) 0%,rgba(240,240,240,1) 100%);background: linear-gradient(top,  rgba(247,249,250,1) 0%,rgba(240,240,240,1) 100%);filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f9fa', endColorstr='#f0f0f0',GradientType=0 );-webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.1) inset;-moz-box-shadow: 0 1px 2px rgba(0,0,0,0.1) inset;-ms-box-shadow: 0 1px 2px rgba(0,0,0,0.1) inset;-o-box-shadow: 0 1px 2px rgba(0,0,0,0.1) inset;box-shadow: 0 1px 2px rgba(0,0,0,0.1) inset;-webkit-border-radius: 0 0 5px 5px;-moz-border-radius: 0 0 5px 5px;-o-border-radius: 0 0 5px 5px;-ms-border-radius: 0 0 5px 5px;border-radius: 0 0 5px 5px;border-top: 1px solid #CFD5D9;padding: 15px 0;}
+.button a {background: url(http://cssdeck.com/uploads/media/items/8/8bcLQqF.png) 0 -112px no-repeat;color: #7E7E7E;font-size: 17px;padding: 2px 0 2px 40px;text-decoration: none;-webkit-transition: all 0.3s ease;-moz-transition: all 0.3s ease;-ms-transition: all 0.3s ease;-o-transition: all 0.3s ease;transition: all 0.3s ease;}
+.button a:hover {background-position: 0 -135px;color: #00aeef;}</style>
 
 <script>
 function makeButton(id, text, color, process) {
     document.getElementById(id).innerHTML = document.getElementById("button").outerHTML;
     
     var button = document.getElementById(id).childNodes[0];
-    button.id = id;
-    button.innerText = text;
-    button.className += ' ' + color;
-    button.onclick = process;}</script>
+    button.id = id;button.innerText = text;button.className += ' ' + color;button.onclick = process;}</script>
 
 <!-- input/option -->
+/*animated border outlines and color change
+ tool tip validation output with green/red outlines and arrow borders, exclaimation icon
+
+...fade in dialog with close (background color, shadow, border)
+...
+
+submit animation (see https://codepen.io/jcoulterdesign/pen/azepmX) with spinner to animated "Authenticated successfully" or "Invalid credentials" dialog
+...button morphs as well
+
+add hover highlighting, press effects, morph into spinner
+*/
 <div id="header-search" onclick="changer(this);"><input type="text" placeholder="Search..." required /></div>
 
 <script>
 $('input').focus(
-    function(){
-        if (!$(this).val()) {
-            $(this).parent('div').css('width','240px');
-            $(this).parent('div').css('border', 'solid 2px green');
-            $(this).parent('div').css('background-color','#ffffff');
-            $(this).parent('div').css('cursor','default'); }
+    function(){ if (!$(this).val()) {$(this).parent('div').css('width','240px');$(this).parent('div').css('border', 'solid 2px green');$(this).parent('div').css('background-color','#ffffff');$(this).parent('div').css('cursor','default'); }
     }).blur(
-        function(){
-            if (!$(this).val()) {
-                $(this).parent('div').css('width','170px');
-                $(this).parent('div').css('border', 'none');
-                $(this).parent('div').css('background-color','#eeeeee');
-                $(this).parent('div').css('cursor','pointer'); }
-            else {
-                $(this).parent('div').css('border', 'solid 2px green'); }
+        function(){ if (!$(this).val()) {$(this).parent('div').css('width','170px');$(this).parent('div').css('border', 'none');$(this).parent('div').css('background-color','#eeeeee');$(this).parent('div').css('cursor','pointer'); }
+            else {$(this).parent('div').css('border', 'solid 2px green'); }
     }).on('input', 
-        function() {
-        if (!$(this).val()) { $(this).parent('div').css('background-color','#ffffff');}
+        function() { if (!$(this).val()) { $(this).parent('div').css('background-color','#ffffff');}
         else { $(this).parent('div').css('background-color','#eeeeee'); }});
 
-function changer(item) { $(item).children('input')[0].focus(); }
-</script>
+function changer(item) { $(item).children('input')[0].focus(); }</script>
 
 <style>
 #header-search { padding: 12px; background-color: #eeeeee; border-radius: 4px; transition: 0.2s ease; margin: 8px; width: 170px; cursor: pointer; }
@@ -116,25 +102,12 @@ function changer(item) { $(item).children('input')[0].focus(); }
 #header-search input { background-color: #eeeeee; width: 160px; border: none; border-radius: 4px; transition: 0.2s ease; color: #000000; font-size: 16px; }
 #header-search input:hover { cursor: pointer; }
 #header-search input:focus { width: 240px; outline: none; background-color: #ffffff; cursor:text; }
+#header-search input:focus #label { left: 36px; top: 12px; }
 #header-search input:valid { background-color: #eeeeee; }
-
 ::placeholder { color: #12301b; font-size: 16px; font-family: Roboto Condensed;}
-
-#label { left: 48px; transition: 0.2 ease; }
-#header-search input:focus #label { left: 36px; top: 12px; }</style>
+#label { left: 48px; transition: 0.2 ease; }</style>
 
 <!-- tab -->
-<style>
-  .tab { overflow: hidden; border: 1px solid #ccc; background-color: #f1f1f1; width: 360px; }
-
-  .tab button { background-color: inherit; float: left; border: none; outline: none; cursor: pointer; padding: 14px 16px; transition: 0.3s; }
-  .tab button:hover { background-color: #ddd; }
-  .tab button.active { background-color: #ccc; }
-
-  .tab-content { display: none; padding: 6px 12px; border: 1px solid #ccc; border-top: none; width: 360px; animation: fadeEffect 1s; }
-
-  @keyframes fadeEffect { from { opacity: 0; } to { opacity: 1; } }</style>
-
 <div class="tabs sample">
   <div class="tab">
     <button class="tab-links" onclick="openTab(event, 'tab1')">A</button>
@@ -155,86 +128,15 @@ function changer(item) { $(item).children('input')[0].focus(); }
 
     document.getElementById(id).style.display = "block"; evt.currentTarget.className += " active"; }</script>
 
+<style>
+.tab { overflow: hidden; border: 1px solid #ccc; background-color: #f1f1f1; width: 360px; }
+.tab button { background-color: inherit; float: left; border: none; outline: none; cursor: pointer; padding: 14px 16px; transition: 0.3s; }
+.tab button:hover { background-color: #ddd; }
+.tab button.active { background-color: #ccc; }
+.tab-content { display: none; padding: 6px 12px; border: 1px solid #ccc; border-top: none; width: 360px; animation: fadeEffect 1s; }
+@keyframes fadeEffect { from { opacity: 0; } to { opacity: 1; } }</style>
+
 <!-- code -->
-<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
-
-<script type="text/javascript">
-    function copyCode() {
-        var code = document.getElementsByClassName("code")[0].innerHTML;
-        var textArea = document.createElement("textarea");
-
-        textArea.value = code;
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-    }
-    
-    function setCode(code) {
-        document.getElementsByClassName("code")[0].innerHTML = code;
-        document.getElementsByClassName("prettyprinted")[0].classList.replace("prettyprinted", "prettyprint");
-        PR.prettyPrint();
-    }
-
-    function setLang(lang) {
-        switch (lang) {
-            case 'bash': 
-                document.getElementsByClassName("prettyprinted")[0].classList = "prettyprint lang-bsh";
-                document.getElementsByClassName("linker")[0].innerHTML = "bsh";
-                document.getElementsByClassName("linker")[0].href = "http://www.javascript.com";
-                break;
-            case 'c': 
-                document.getElementsByClassName("prettyprinted")[0].classList = "prettyprint lang-c";
-                document.getElementsByClassName("linker")[0].innerHTML = "C";
-                document.getElementsByClassName("linker")[0].href = "http://www.javascript.com";
-                break;
-            case 'cpp': 
-                document.getElementsByClassName("prettyprinted")[0].classList = "prettyprint lang-cpp";
-                document.getElementsByClassName("linker")[0].innerHTML = "C++";
-                document.getElementsByClassName("linker")[0].href = "http://www.javascript.com";
-                break;
-            case 'java': 
-                document.getElementsByClassName("prettyprinted")[0].classList = "prettyprint lang-java";
-                document.getElementsByClassName("linker")[0].innerHTML = "Java";
-                document.getElementsByClassName("linker")[0].href = "http://www.javascript.com";
-                break;
-            case 'js': 
-                document.getElementsByClassName("prettyprinted")[0].classList = "prettyprint lang-js";
-                document.getElementsByClassName("linker")[0].innerHTML = "JS";
-                document.getElementsByClassName("linker")[0].href = "http://www.javascript.com";
-                break;
-            case 'html': 
-                document.getElementsByClassName("prettyprinted")[0].classList = "prettyprint lang-html";
-                document.getElementsByClassName("linker")[0].innerHTML = "HTML";
-                document.getElementsByClassName("linker")[0].href = "http://www.javascript.com";
-                break;
-        }
-
-        window.onload = PR.prettyPrint();
-    }</script>
-
-<style scoped>
-pre {background: #f4f4f4;border: 1px solid #777777;border-left: 4px solid #777777;color: #666;page-break-inside: avoid;font: 15px monospace;line-height: 1.6;margin-bottom: 1.6em;max-width: 100%;overflow: auto;padding: 1em 1.5em;display: block;word-wrap: break-word;}
-
-pre.prettyprint {padding: 1em 1.5em!important;border-left: 4px solid #777777!important;border-top: 1px solid #777777!important;border-bottom: 1px solid #777777!important;border-right: 1px solid #777777!important;}
-
-div.holder {position: relative;width: 740px;}
-        
-div.block {width: 780px;}
-div.outline {border: 1px solid #777777;border-left: 4px solid #777777!important; background: #e4e4e4;margin-left: 40px;margin-bottom: -17px;padding: 3 0 3 3;display: flex;align-items: center;}
-
-div.lang {position:absolute;}
-div.copy {background: #e4e4e4;float:right;width: 48px;height: 28px;margin-left: 650px; margin-top: -4px;margin-bottom: -4px;border-left: 1px solid #777777;border-top: 1px solid #777777!important; border-bottom: 1px solid #777777!important;}
-
-div.copy:hover {background: #aaaaaa;cursor: pointer; }
-
-a {margin-left: 12px;font: bold 16px monospace;color: #666;text-decoration: none;}
-a:hover {text-decoration: underline; }
-        
-#copy {width: 18px;height: 18px;margin-left:12px; margin-top: 5px; z-index: 20;}</style>
-
 <div class="holder">
     <div class="outline"><div class="lang"><a class="linker">language</a></div><div class="copy"><img id="copy" title="Copy" onclick="copyCode();" src="./resource/copy.svg" /></div></div>
     <div class="block">  
@@ -252,24 +154,72 @@ a:hover {text-decoration: underline; }
   this.closeHandler = function () { if (closeHandler) closeHandler() };
 }</code></pre>
 -->
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+
+<script type="text/javascript">
+function copyCode() {
+  var code = document.getElementsByClassName("code")[0].innerHTML, textArea = document.createElement("textarea");
+  textArea.value = code; document.body.appendChild(textArea); textArea.focus(); textArea.select();
+  document.execCommand('copy'); document.body.removeChild(textArea); }
+    
+function setCode(code) { document.getElementsByClassName("code")[0].innerHTML = code; document.getElementsByClassName("prettyprinted")[0].classList.replace("prettyprinted", "prettyprint"); PR.prettyPrint();}
+function setLang(lang) { document.getElementsByClassName("prettyprinted")[0].classList = "prettyprint lang-bsh"; document.getElementsByClassName("linker")[0].innerHTML = "bsh"; document.getElementsByClassName("linker")[0].href = "http://www.javascript.com"; window.onload = PR.prettyPrint();}</script>
+
+<style scoped>
+pre {background: #f4f4f4;border: 1px solid #777777;border-left: 4px solid #777777;color: #666;page-break-inside: avoid;font: 15px monospace;line-height: 1.6;margin-bottom: 1.6em;max-width: 100%;overflow: auto;padding: 1em 1.5em;display: block;word-wrap: break-word;}
+pre.prettyprint {padding: 1em 1.5em!important;border-left: 4px solid #777777!important;border-top: 1px solid #777777!important;border-bottom: 1px solid #777777!important;border-right: 1px solid #777777!important;}
+
+div.holder {position: relative;width: 740px;}
+div.block {width: 780px;}
+div.outline {border: 1px solid #777777;border-left: 4px solid #777777!important; background: #e4e4e4;margin-left: 40px;margin-bottom: -17px;padding: 3 0 3 3;display: flex;align-items: center;}
+div.lang {position:absolute;}
+div.copy {background: #e4e4e4;float:right;width: 48px;height: 28px;margin-left: 650px; margin-top: -4px;margin-bottom: -4px;border-left: 1px solid #777777;border-top: 1px solid #777777!important; border-bottom: 1px solid #777777!important;}
+div.copy:hover {background: #aaaaaa;cursor: pointer; }
+
+a {margin-left: 12px;font: bold 16px monospace;color: #666;text-decoration: none;}
+a:hover {text-decoration: underline; }
+        
+#copy {width: 18px;height: 18px;margin-left:12px; margin-top: 5px; z-index: 20;}</style>
 
 <!-- list -->
-<style>
+<div id="myDIV" class="header">
+  <h2>My To Do List</h2>
+  <input type="text" id="myInput" placeholder="Title...">
+  <span onclick="newElement()" class="addBtn">Add</span></div>
 
+<ul id="myUL">
+  <li>Hit the gym</li>
+  <li class="checked">Pay bills</li>
+  <li>Meet George</li>
+  <li>Buy eggs</li>
+  <li>Read a book</li>
+  <li>Organize office</li></ul>
+
+<script>
+var myNodelist = document.getElementsByTagName("LI"), i; // Create a "close" button and append it to each list item
+for (i = 0; i < myNodelist.length; i++) { var span = document.createElement("SPAN"), txt = document.createTextNode("\u00D7"); span.className = "close"; span.appendChild(txt); myNodelist[i].appendChild(span); }
+
+var close = document.getElementsByClassName("close"), i; // Click on a close button to hide the current list item
+for (i = 0; i < close.length; i++) { close[i].onclick = function() { var div = this.parentElement; div.style.display = "none"; } }
+
+var list = document.querySelector('ul'); // Add a "checked" symbol when clicking on a list item
+list.addEventListener('click', function(ev) { if (ev.target.tagName === 'LI') { ev.target.classList.toggle('checked'); } }, false);
+
+function newElement() { // Create a new list item when clicking on the "Add" button
+  var li = document.createElement("li"), inputValue = document.getElementById("myInput").value, t = document.createTextNode(inputValue); li.appendChild(t);
+  if (inputValue === '') { alert("You must write something!"); } else { document.getElementById("myUL").appendChild(li); }
+  document.getElementById("myInput").value = "";
+  var span = document.createElement("SPAN"), txt = document.createTextNode("\u00D7"); span.className = "close"; span.appendChild(txt); li.appendChild(span);
+  for (i = 0; i < close.length; i++) { close[i].onclick = function() { var div = this.parentElement; div.style.display = "none"; } } }</script>
+
+<style>
 * {box-sizing: border-box;}
 
 ul {margin: 0;padding: 0;}
-ul li {cursor: pointer;position: relative;padding: 12px 8px 12px 40px;list-style-type: none;background: #eee;font-size: 18px;transition: 0.2s;
-  
-  /* make the list items unselectable */
-  -webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;}
-
+ul li {cursor: pointer;position: relative;padding: 12px 8px 12px 40px;list-style-type: none;background: #eee;font-size: 18px;transition: 0.2s;/* make the list items unselectable */-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;}
 ul li:nth-child(odd) {background: #f9f9f9; }
-
 ul li:hover { background: #ddd; }
-
 ul li.checked { background: #888; color: #fff; text-decoration: line-through; }
-
 ul li.checked::before {content: '';position: absolute;border-color: #fff;border-style: solid;border-width: 0 2px 2px 0;top: 10px;left: 16px;transform: rotate(45deg);height: 15px;width: 7px;}
 
 .close {position: absolute;right: 0;top: 0;padding: 12px 16px 12px 16px;}
@@ -278,147 +228,23 @@ ul li.checked::before {content: '';position: absolute;border-color: #fff;border-
 .header {background-color: #f44336;padding: 30px 40px;color: white;text-align: center;}
 .header:after {content: "";display: table;clear: both;}
 
-input { margin: 0;border: none;border-radius: 0;width: 75%;padding: 10px;float: left;font-size: 16px;}
-
-</style>
-
-
-<script>
-function setClick(process) {document.getElementById('button1').onclick = process;}
-
-function setColor(color) {
-	document.getElementById('button1').className = color;
-	//$('#button1').className = color;
-	document.getElementById('button1').className += ' button';
-}
-
-function setText(text) {document.getElementById('button1').innerText = text;}
-</script>
-
-<div id="myDIV" class="header">
-  <h2>My To Do List</h2>
-  <input type="text" id="myInput" placeholder="Title...">
-  <span onclick="newElement()" class="addBtn">Add</span>
-</div>
-
-<ul id="myUL">
-  <li>Hit the gym</li>
-  <li class="checked">Pay bills</li>
-  <li>Meet George</li>
-  <li>Buy eggs</li>
-  <li>Read a book</li>
-  <li>Organize office</li>
-</ul>
-
-<script>
-// Create a "close" button and append it to each list item
-var myNodelist = document.getElementsByTagName("LI");
-var i;
-for (i = 0; i < myNodelist.length; i++) {
-  var span = document.createElement("SPAN");
-  var txt = document.createTextNode("\u00D7");
-  span.className = "close";
-  span.appendChild(txt);
-  myNodelist[i].appendChild(span);
-}
-
-// Click on a close button to hide the current list item
-var close = document.getElementsByClassName("close");
-var i;
-for (i = 0; i < close.length; i++) {
-  close[i].onclick = function() {
-    var div = this.parentElement;
-    div.style.display = "none";
-  }
-}
-
-// Add a "checked" symbol when clicking on a list item
-var list = document.querySelector('ul');
-list.addEventListener('click', function(ev) {
-  if (ev.target.tagName === 'LI') {
-    ev.target.classList.toggle('checked');
-  }
-}, false);
-
-// Create a new list item when clicking on the "Add" button
-function newElement() {
-  var li = document.createElement("li");
-  var inputValue = document.getElementById("myInput").value;
-  var t = document.createTextNode(inputValue);
-  li.appendChild(t);
-  if (inputValue === '') {
-    alert("You must write something!");
-  } else {
-    document.getElementById("myUL").appendChild(li);
-  }
-  document.getElementById("myInput").value = "";
-
-  var span = document.createElement("SPAN");
-  var txt = document.createTextNode("\u00D7");
-  span.className = "close";
-  span.appendChild(txt);
-  li.appendChild(span);
-
-  for (i = 0; i < close.length; i++) {
-    close[i].onclick = function() {
-      var div = this.parentElement;
-      div.style.display = "none";
-    }
-  }
-}
-</script>
+input { margin: 0;border: none;border-radius: 0;width: 75%;padding: 10px;float: left;font-size: 16px;}</style>
 
 <!-- media -->
-
 <video width="320" height="240" controls>
   <source src="movie.mp4" type="video/mp4">
   <source src="movie.ogg" type="video/ogg">
-Your browser does not support the video tag.
-</video>
+Your browser does not support the video tag.</video>
 
-<!-- setup YouTube channel programming channel
-video tips... no drinking, cover arms, situp straight, no pauses
--->
-
-navigation use...
-arrow-down.svg, arrow-left.svg, arrow-right.svg, arrow-up.svg, caret-square-down.svg, caret-square-left.svg, caret-square-up.svg
-
-dialog...
-check-square.svg, minus-square.svg, plus-square.svg, window-close.svg
-
-sort use...
-sort.svg, sort-up.svg, sort-down.svg, sort-alpha-down.svg, sort-alpha-up.svg, sort-numeric-down.svg, sort-numeric-up.svg
-
-settings...
+<!-- settings -->
 ellipsis-h.svg, ellipsis-v.svg
-
-from notification...dialog... toast...?
-
-...hamburger...
 <div class="nav-icon"><div></div></div>
-
+<style>
 .nav-icon { margin: 1em; width: 40px; }
-.nav-icon:after, 
-.nav-icon:before, 
-.nav-icon div { background-color: #fff; border-radius: 3px; content: ''; display: block; height: 5px; margin: 7px 0; transition: all .2s ease-in-out; }
+.nav-icon:after, .nav-icon:before, .nav-icon div { background-color: #fff; border-radius: 3px; content: ''; display: block; height: 5px; margin: 7px 0; transition: all .2s ease-in-out; }
 .nav-icon:hover:before { transform: translateY(12px) rotate(135deg); }
 .nav-icon:hover:after { transform: translateY(-12px) rotate(-135deg); }
-.nav-icon:hover div { transform: scale(0); }
+.nav-icon:hover div { transform: scale(0); }</style>
 
-...speech recognition...
-  <script>
-    window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
-    let finalTranscript = ''; let recognition = new window.SpeechRecognition();
-    recognition.interimResults = true;
-    recognition.maxAlternatives = 10;
-    recognition.continuous = true;
-    recognition.onresult = (event) => {
-      let interimTranscript = '';
-      for (let i = event.resultIndex, len = event.results.length; i < len; i++) {
-        let transcript = event.results[i][0].transcript;
-        if (event.results[i].isFinal) { finalTranscript += transcript;
-        } else { interimTranscript += transcript; } }
-      document.querySelector('body').innerHTML = finalTranscript + '<i style="color:#ddd;">' + interimTranscript + '</>';}
-    recognition.start();</script>
-
-<!-- contact, tooltip?, quote, recipe-->
+<!-- table -->
+sort use... sort.svg, sort-up.svg, sort-down.svg, sort-alpha-down.svg, sort-alpha-up.svg, sort-numeric-down.svg, sort-numeric-up.svg

@@ -3,7 +3,7 @@
 
 A self-propagating stack of infinitive-basis, built on L2 (LAMP 2.0).
 
-![utopia](/apt/image/utopia.png)
+![utopia](/apt/image/utopia2.png)
 
 The stack is organized as:
 
@@ -14,7 +14,7 @@ The stack is organized as:
 - ap(**I**), service files for server processes to handle data, mail, etc.
 - ap(**A**), site index that ties everything together
 
-![lamp](/apt/image/lamp.png)
+![lamp](/apt/image/lamp2.png)
 
 LAMP 2.0 (**L2**) includes:
 
@@ -31,7 +31,7 @@ Hardware "CPU" files used to support the application. Includes a USB to run in c
 
 This bootable USB serves as both a "bit" client or a distributable "bolt" server. Also works on Linux, Mac, and Windows machines as a functional USB drive.
 
-![usb](/apt/image/usb.png)
+![usb](/apt/image/usb2.png)
 
 To start you will need:
 
@@ -443,7 +443,7 @@ mongoexport --db Mydb --collection Items229900 --out D:/test.json
 mongoimport --db <dbname> --collection <collection-name> --file <json-filename>
 ```
 
-To usee database run `mongo`, then:
+To use database run `mongo`, then:
 
 ```mongo
 use myDb
