@@ -77,3 +77,14 @@ cryptsetup open --header header.img /dev/sdX enc
 
 cryptsetup luksHeaderBackup /dev/<device> --header-backup-file /mnt/<backup>/<file>.img
 cryptsetup luksHeaderRestore /dev/<device> --header-backup-file ./mnt/<backup>/<file>.img
+
+git clone https://bitmaus:Treeop4714%21@github.com/bitmaus/key.git
+
+
+<!-- setup YouTube channel programming channel
+video tips... no drinking, cover arms, situp straight, no pauses
+-->
+
+use reference
+
+db.createCollection("dictionary")

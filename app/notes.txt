@@ -1,0 +1,22 @@
+
+use icons for easy input, all languages...
+
+#header-sign div {  display: inline-block; }
+#sign { opacity: 0; transition: 1s ease opacity; position: absolute; height: 200px; width: 120px; }
+#sign-dialog { padding: 16px; }
+
+#log { opacity: 0; transition: 1s ease; }
+
+.hidden { visibility: hidden; height: 0; width: 0;}
+.disabled { pointer-events: none; opacity: 0.5; }
+
+label {position: absolute;font-weight: 600;color: #777777;user-select: none;transition: 0.15s ease-in-out;}
+
+input[data-empty="false"] + label,
+input:valid + label,
+input:focus + label {margin-bottom: 36px;font-size: 10px;color: #0d5224;background-color: white;}
+::-webkit-input-placeholder {opacity: 0;transition: inherit;}
+input:focus::-webkit-input-placeholder {opacity: 1;} 
+
+.icon {height: 16px;width: 16px;}
+img {padding-left: 8px;padding-right: 8px;}
